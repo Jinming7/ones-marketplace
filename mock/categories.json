@@ -10,23 +10,5 @@
     "slug": "reporting",
     "name": "Reporting",
     "description": "Insights, dashboards and weekly updates."
-  },
-  {
-    "id": "cat-3",
-    "slug": "automation",
-    "name": "Automation",
-    "description": "Automate repetitive project and process tasks."
-  },
-  {
-    "id": "cat-4",
-    "slug": "devops",
-    "name": "DevOps",
-    "description": "Delivery pipeline, deploy, and ops integrations."
-  },
-  {
-    "id": "cat-5",
-    "slug": "security",
-    "name": "Security",
-    "description": "Risk, compliance, and audit tooling."
   }
 ]
