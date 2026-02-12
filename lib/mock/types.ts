@@ -5,15 +5,11 @@ export type AppItem = {
   tagline: string;
   description: string;
   logoUrl: string;
-  icon: string;
   vendorId: string;
   categoryIds: string[];
-  tags: string[];
   rating: number;
   reviews: number;
   installCount: number;
-  featured: boolean;
-  recommended: boolean;
 };
 
 export type Vendor = {

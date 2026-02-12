@@ -1,0 +1,16 @@
+:root {
+  --color-brand-primary: #1F6BFF;
+  --color-brand-primary-hover: #1959D1;
+  --color-black: #000000;
+  --color-white: #FFFFFF;
+  --color-gray-100: #F5F6F8;
+  --color-gray-300: #DADDE5;
+  --color-gray-600: #6B7280;
+  --color-gray-900: #111827;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --shadow-soft: 0 4px 12px rgba(0,0,0,0.08);
+}
