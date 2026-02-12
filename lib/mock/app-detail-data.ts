@@ -15,6 +15,7 @@ export type AppScreenshot = {
   title: string;
   caption: string;
   highlights: string[];
+  imageUrl: string;
 };
 
 export type AppPricingPlan = {
@@ -97,18 +98,21 @@ function buildScreenshots(app: HomeApp): AppScreenshot[] {
       title: 'Overview Dashboard',
       caption: `Track ${app.name} outcomes with unified visibility across squads and releases.`,
       highlights: ['Realtime KPI board', 'Owner drill-down', 'Weekly trend insight'],
+      imageUrl: '/mock/screens/app-screen-overview.svg',
     },
     {
       id: `${app.id}-screen-2`,
       title: 'Workflow Automation',
       caption: 'Configure rules and automation chains without external scripting.',
       highlights: ['Conditional triggers', 'Approval stages', 'Ops-ready logs'],
+      imageUrl: '/mock/screens/app-screen-automation.svg',
     },
     {
       id: `${app.id}-screen-3`,
       title: 'Executive Summary',
       caption: 'Generate structured summaries for delivery leaders and stakeholders.',
       highlights: ['Portfolio view', 'Risk snapshot', 'Shareable briefing'],
+      imageUrl: '/mock/screens/app-screen-exec.svg',
     },
   ];
 }
