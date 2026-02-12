@@ -1,28 +1,442 @@
 [
   {
     "id": "app-1",
-    "slug": "ones-workflow-kit",
-    "name": "ONES Workflow Kit",
-    "tagline": "Template workflows for agile and hybrid delivery.",
-    "description": "Accelerate project setup with curated workflow templates, automation presets, and permission-ready defaults.",
-    "logoUrl": "/icons/workflow.svg",
+    "slug": "flow-pilot",
+    "name": "Flow Pilot",
+    "tagline": "Flow Pilot helps teams move faster with less manual work.",
+    "description": "Flow Pilot provides practical capabilities for ONES teams to streamline planning, execution, and reporting.",
+    "logoUrl": "/icons/app-placeholder.svg",
+    "icon": "🚀",
     "vendorId": "vendor-1",
-    "categoryIds": ["cat-1"],
-    "rating": 4.7,
-    "reviews": 128,
-    "installCount": 3200
+    "categoryIds": [
+      "cat-1"
+    ],
+    "tags": [
+      "Agile",
+      "Template"
+    ],
+    "rating": 4.2,
+    "reviews": 40,
+    "installCount": 800,
+    "featured": true,
+    "recommended": true
   },
   {
     "id": "app-2",
-    "slug": "smart-weekly-report",
-    "name": "Smart Weekly Report",
-    "tagline": "Generate weekly team reports from issue activity.",
-    "description": "Collect issue updates, summarize progress, and output management-ready weekly report drafts.",
-    "logoUrl": "/icons/report.svg",
+    "slug": "sprint-sync",
+    "name": "Sprint Sync",
+    "tagline": "Sprint Sync helps teams move faster with less manual work.",
+    "description": "Sprint Sync provides practical capabilities for ONES teams to streamline planning, execution, and reporting.",
+    "logoUrl": "/icons/app-placeholder.svg",
+    "icon": "📊",
     "vendorId": "vendor-2",
-    "categoryIds": ["cat-2"],
+    "categoryIds": [
+      "cat-2"
+    ],
+    "tags": [
+      "Reporting",
+      "Dashboard"
+    ],
+    "rating": 4.3,
+    "reviews": 47,
+    "installCount": 1060,
+    "featured": true,
+    "recommended": false
+  },
+  {
+    "id": "app-3",
+    "slug": "insight-board",
+    "name": "Insight Board",
+    "tagline": "Insight Board helps teams move faster with less manual work.",
+    "description": "Insight Board provides practical capabilities for ONES teams to streamline planning, execution, and reporting.",
+    "logoUrl": "/icons/app-placeholder.svg",
+    "icon": "🧩",
+    "vendorId": "vendor-3",
+    "categoryIds": [
+      "cat-3"
+    ],
+    "tags": [
+      "Automation",
+      "No-Code"
+    ],
+    "rating": 4.4,
+    "reviews": 54,
+    "installCount": 1320,
+    "featured": true,
+    "recommended": false
+  },
+  {
+    "id": "app-4",
+    "slug": "issue-radar",
+    "name": "Issue Radar",
+    "tagline": "Issue Radar helps teams move faster with less manual work.",
+    "description": "Issue Radar provides practical capabilities for ONES teams to streamline planning, execution, and reporting.",
+    "logoUrl": "/icons/app-placeholder.svg",
+    "icon": "⚙️",
+    "vendorId": "vendor-4",
+    "categoryIds": [
+      "cat-4"
+    ],
+    "tags": [
+      "DevOps",
+      "CI/CD"
+    ],
     "rating": 4.5,
-    "reviews": 84,
-    "installCount": 1900
+    "reviews": 61,
+    "installCount": 1580,
+    "featured": true,
+    "recommended": true
+  },
+  {
+    "id": "app-5",
+    "slug": "delivery-pulse",
+    "name": "Delivery Pulse",
+    "tagline": "Delivery Pulse helps teams move faster with less manual work.",
+    "description": "Delivery Pulse provides practical capabilities for ONES teams to streamline planning, execution, and reporting.",
+    "logoUrl": "/icons/app-placeholder.svg",
+    "icon": "🔒",
+    "vendorId": "vendor-5",
+    "categoryIds": [
+      "cat-5"
+    ],
+    "tags": [
+      "Security",
+      "Compliance"
+    ],
+    "rating": 4.6,
+    "reviews": 68,
+    "installCount": 1840,
+    "featured": true,
+    "recommended": false
+  },
+  {
+    "id": "app-6",
+    "slug": "auto-ops",
+    "name": "Auto Ops",
+    "tagline": "Auto Ops helps teams move faster with less manual work.",
+    "description": "Auto Ops provides practical capabilities for ONES teams to streamline planning, execution, and reporting.",
+    "logoUrl": "/icons/app-placeholder.svg",
+    "icon": "📦",
+    "vendorId": "vendor-1",
+    "categoryIds": [
+      "cat-1"
+    ],
+    "tags": [
+      "Agile",
+      "Template"
+    ],
+    "rating": 4.7,
+    "reviews": 75,
+    "installCount": 2100,
+    "featured": true,
+    "recommended": false
+  },
+  {
+    "id": "app-7",
+    "slug": "release-watch",
+    "name": "Release Watch",
+    "tagline": "Release Watch helps teams move faster with less manual work.",
+    "description": "Release Watch provides practical capabilities for ONES teams to streamline planning, execution, and reporting.",
+    "logoUrl": "/icons/app-placeholder.svg",
+    "icon": "🔍",
+    "vendorId": "vendor-2",
+    "categoryIds": [
+      "cat-2"
+    ],
+    "tags": [
+      "Reporting",
+      "Dashboard"
+    ],
+    "rating": 4.8,
+    "reviews": 82,
+    "installCount": 2360,
+    "featured": true,
+    "recommended": true
+  },
+  {
+    "id": "app-8",
+    "slug": "spec-link",
+    "name": "Spec Link",
+    "tagline": "Spec Link helps teams move faster with less manual work.",
+    "description": "Spec Link provides practical capabilities for ONES teams to streamline planning, execution, and reporting.",
+    "logoUrl": "/icons/app-placeholder.svg",
+    "icon": "📈",
+    "vendorId": "vendor-3",
+    "categoryIds": [
+      "cat-3"
+    ],
+    "tags": [
+      "Automation",
+      "No-Code"
+    ],
+    "rating": 4.9,
+    "reviews": 89,
+    "installCount": 2620,
+    "featured": true,
+    "recommended": false
+  },
+  {
+    "id": "app-9",
+    "slug": "team-signals",
+    "name": "Team Signals",
+    "tagline": "Team Signals helps teams move faster with less manual work.",
+    "description": "Team Signals provides practical capabilities for ONES teams to streamline planning, execution, and reporting.",
+    "logoUrl": "/icons/app-placeholder.svg",
+    "icon": "🛠️",
+    "vendorId": "vendor-4",
+    "categoryIds": [
+      "cat-4"
+    ],
+    "tags": [
+      "DevOps",
+      "CI/CD"
+    ],
+    "rating": 4.2,
+    "reviews": 96,
+    "installCount": 2880,
+    "featured": false,
+    "recommended": false
+  },
+  {
+    "id": "app-10",
+    "slug": "risk-shield",
+    "name": "Risk Shield",
+    "tagline": "Risk Shield helps teams move faster with less manual work.",
+    "description": "Risk Shield provides practical capabilities for ONES teams to streamline planning, execution, and reporting.",
+    "logoUrl": "/icons/app-placeholder.svg",
+    "icon": "🧠",
+    "vendorId": "vendor-5",
+    "categoryIds": [
+      "cat-5"
+    ],
+    "tags": [
+      "Security",
+      "Compliance"
+    ],
+    "rating": 4.3,
+    "reviews": 103,
+    "installCount": 3140,
+    "featured": false,
+    "recommended": true
+  },
+  {
+    "id": "app-11",
+    "slug": "roadmap-lens",
+    "name": "Roadmap Lens",
+    "tagline": "Roadmap Lens helps teams move faster with less manual work.",
+    "description": "Roadmap Lens provides practical capabilities for ONES teams to streamline planning, execution, and reporting.",
+    "logoUrl": "/icons/app-placeholder.svg",
+    "icon": "🚀",
+    "vendorId": "vendor-1",
+    "categoryIds": [
+      "cat-1"
+    ],
+    "tags": [
+      "Agile",
+      "Template"
+    ],
+    "rating": 4.4,
+    "reviews": 110,
+    "installCount": 3400,
+    "featured": false,
+    "recommended": false
+  },
+  {
+    "id": "app-12",
+    "slug": "bug-patrol",
+    "name": "Bug Patrol",
+    "tagline": "Bug Patrol helps teams move faster with less manual work.",
+    "description": "Bug Patrol provides practical capabilities for ONES teams to streamline planning, execution, and reporting.",
+    "logoUrl": "/icons/app-placeholder.svg",
+    "icon": "📊",
+    "vendorId": "vendor-2",
+    "categoryIds": [
+      "cat-2"
+    ],
+    "tags": [
+      "Reporting",
+      "Dashboard"
+    ],
+    "rating": 4.5,
+    "reviews": 117,
+    "installCount": 3660,
+    "featured": false,
+    "recommended": false
+  },
+  {
+    "id": "app-13",
+    "slug": "trace-matrix",
+    "name": "Trace Matrix",
+    "tagline": "Trace Matrix helps teams move faster with less manual work.",
+    "description": "Trace Matrix provides practical capabilities for ONES teams to streamline planning, execution, and reporting.",
+    "logoUrl": "/icons/app-placeholder.svg",
+    "icon": "🧩",
+    "vendorId": "vendor-3",
+    "categoryIds": [
+      "cat-3"
+    ],
+    "tags": [
+      "Automation",
+      "No-Code"
+    ],
+    "rating": 4.6,
+    "reviews": 124,
+    "installCount": 3920,
+    "featured": false,
+    "recommended": true
+  },
+  {
+    "id": "app-14",
+    "slug": "deploy-compass",
+    "name": "Deploy Compass",
+    "tagline": "Deploy Compass helps teams move faster with less manual work.",
+    "description": "Deploy Compass provides practical capabilities for ONES teams to streamline planning, execution, and reporting.",
+    "logoUrl": "/icons/app-placeholder.svg",
+    "icon": "⚙️",
+    "vendorId": "vendor-4",
+    "categoryIds": [
+      "cat-4"
+    ],
+    "tags": [
+      "DevOps",
+      "CI/CD"
+    ],
+    "rating": 4.7,
+    "reviews": 131,
+    "installCount": 4180,
+    "featured": false,
+    "recommended": false
+  },
+  {
+    "id": "app-15",
+    "slug": "velocity-pro",
+    "name": "Velocity Pro",
+    "tagline": "Velocity Pro helps teams move faster with less manual work.",
+    "description": "Velocity Pro provides practical capabilities for ONES teams to streamline planning, execution, and reporting.",
+    "logoUrl": "/icons/app-placeholder.svg",
+    "icon": "🔒",
+    "vendorId": "vendor-5",
+    "categoryIds": [
+      "cat-5"
+    ],
+    "tags": [
+      "Security",
+      "Compliance"
+    ],
+    "rating": 4.8,
+    "reviews": 138,
+    "installCount": 4440,
+    "featured": false,
+    "recommended": false
+  },
+  {
+    "id": "app-16",
+    "slug": "focus-grid",
+    "name": "Focus Grid",
+    "tagline": "Focus Grid helps teams move faster with less manual work.",
+    "description": "Focus Grid provides practical capabilities for ONES teams to streamline planning, execution, and reporting.",
+    "logoUrl": "/icons/app-placeholder.svg",
+    "icon": "📦",
+    "vendorId": "vendor-1",
+    "categoryIds": [
+      "cat-1"
+    ],
+    "tags": [
+      "Agile",
+      "Template"
+    ],
+    "rating": 4.9,
+    "reviews": 145,
+    "installCount": 4700,
+    "featured": false,
+    "recommended": true
+  },
+  {
+    "id": "app-17",
+    "slug": "workflow-beacon",
+    "name": "Workflow Beacon",
+    "tagline": "Workflow Beacon helps teams move faster with less manual work.",
+    "description": "Workflow Beacon provides practical capabilities for ONES teams to streamline planning, execution, and reporting.",
+    "logoUrl": "/icons/app-placeholder.svg",
+    "icon": "🔍",
+    "vendorId": "vendor-2",
+    "categoryIds": [
+      "cat-2"
+    ],
+    "tags": [
+      "Reporting",
+      "Dashboard"
+    ],
+    "rating": 4.2,
+    "reviews": 152,
+    "installCount": 4960,
+    "featured": false,
+    "recommended": false
+  },
+  {
+    "id": "app-18",
+    "slug": "quality-hub",
+    "name": "Quality Hub",
+    "tagline": "Quality Hub helps teams move faster with less manual work.",
+    "description": "Quality Hub provides practical capabilities for ONES teams to streamline planning, execution, and reporting.",
+    "logoUrl": "/icons/app-placeholder.svg",
+    "icon": "📈",
+    "vendorId": "vendor-3",
+    "categoryIds": [
+      "cat-3"
+    ],
+    "tags": [
+      "Automation",
+      "No-Code"
+    ],
+    "rating": 4.3,
+    "reviews": 159,
+    "installCount": 5220,
+    "featured": false,
+    "recommended": false
+  },
+  {
+    "id": "app-19",
+    "slug": "ops-console",
+    "name": "Ops Console",
+    "tagline": "Ops Console helps teams move faster with less manual work.",
+    "description": "Ops Console provides practical capabilities for ONES teams to streamline planning, execution, and reporting.",
+    "logoUrl": "/icons/app-placeholder.svg",
+    "icon": "🛠️",
+    "vendorId": "vendor-4",
+    "categoryIds": [
+      "cat-4"
+    ],
+    "tags": [
+      "DevOps",
+      "CI/CD"
+    ],
+    "rating": 4.4,
+    "reviews": 166,
+    "installCount": 5480,
+    "featured": false,
+    "recommended": true
+  },
+  {
+    "id": "app-20",
+    "slug": "review-stream",
+    "name": "Review Stream",
+    "tagline": "Review Stream helps teams move faster with less manual work.",
+    "description": "Review Stream provides practical capabilities for ONES teams to streamline planning, execution, and reporting.",
+    "logoUrl": "/icons/app-placeholder.svg",
+    "icon": "🧠",
+    "vendorId": "vendor-5",
+    "categoryIds": [
+      "cat-5"
+    ],
+    "tags": [
+      "Security",
+      "Compliance"
+    ],
+    "rating": 4.5,
+    "reviews": 173,
+    "installCount": 5740,
+    "featured": false,
+    "recommended": false
   }
 ]

@@ -14,5 +14,29 @@
     "description": "Automation and reporting tools for engineering teams.",
     "logoUrl": "/icons/acme.svg",
     "website": "https://example.com"
+  },
+  {
+    "id": "vendor-3",
+    "slug": "delta-workflow",
+    "name": "Delta Workflow",
+    "description": "Workflow extensions for growing product teams.",
+    "logoUrl": "/icons/delta.svg",
+    "website": "https://example.com"
+  },
+  {
+    "id": "vendor-4",
+    "slug": "nova-data",
+    "name": "Nova Data",
+    "description": "Data and dashboard products for engineering orgs.",
+    "logoUrl": "/icons/nova.svg",
+    "website": "https://example.com"
+  },
+  {
+    "id": "vendor-5",
+    "slug": "orbit-security",
+    "name": "Orbit Security",
+    "description": "Security and compliance integrations.",
+    "logoUrl": "/icons/orbit.svg",
+    "website": "https://example.com"
   }
 ]

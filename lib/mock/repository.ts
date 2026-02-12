@@ -7,6 +7,10 @@ export const appList = apps as AppItem[];
 export const categoryList = categories as Category[];
 export const vendorList = vendors as Vendor[];
 
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export function getAppBySlug(slug: string) {
   return appList.find((app) => app.slug === slug);
 }
@@ -29,4 +33,22 @@ export function getAppsByCategoryId(categoryId: string) {
 
 export function getAppsByVendorId(vendorId: string) {
   return appList.filter((app) => app.vendorId === vendorId);
+}
+
+export function getVendorMap() {
+  return new Map(vendorList.map((vendor) => [vendor.id, vendor]));
+}
+
+export function getCategoryMap() {
+  return new Map(categoryList.map((category) => [category.id, category]));
+}
+
+export async function getHomeData() {
+  await sleep(500);
+
+  return {
+    popularApps: appList.slice(0, 12),
+    recommendedApps: appList.filter((app) => app.recommended).slice(0, 6),
+    categories: categoryList,
+  };
 }
