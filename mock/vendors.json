@@ -1,0 +1,18 @@
+[
+  {
+    "id": "vendor-1",
+    "slug": "ones-official",
+    "name": "ONES Official",
+    "description": "Official integrations and tools from ONES team.",
+    "logoUrl": "/icons/ones.svg",
+    "website": "https://ones.com"
+  },
+  {
+    "id": "vendor-2",
+    "slug": "acme-labs",
+    "name": "Acme Labs",
+    "description": "Automation and reporting tools for engineering teams.",
+    "logoUrl": "/icons/acme.svg",
+    "website": "https://example.com"
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "id": "cat-1",
+    "slug": "project-management",
+    "name": "Project Management",
+    "description": "Planning, tracking and delivery workflows."
+  },
+  {
+    "id": "cat-2",
+    "slug": "reporting",
+    "name": "Reporting",
+    "description": "Insights, dashboards and weekly updates."
+  }
+]
