@@ -3,13 +3,69 @@
 @tailwind utilities;
 
 :root {
-  --background: #f4f8f6;
+  --background: #f8fafc;
   --foreground: #0f172a;
 }
 
 body {
   margin: 0;
   color: var(--foreground);
-  background: radial-gradient(circle at 15% 10%, #e4f4eb 0, #f4f8f6 40%, #f7faf9 100%);
-  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+  background: var(--background);
+  font-family: Inter, "SF Pro Text", "Segoe UI", sans-serif;
+}
+
+@keyframes floatSlow {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes floatMedium {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes floatFast {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes corePulse {
+  0%,
+  100% {
+    box-shadow: 0 0 24px rgba(37, 99, 235, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 38px rgba(37, 99, 235, 0.7);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+.animate-float-medium {
+  animation: floatMedium 7s ease-in-out infinite;
+}
+
+.animate-float-fast {
+  animation: floatFast 5s ease-in-out infinite;
+}
+
+.animate-core-pulse {
+  animation: corePulse 4s ease-in-out infinite;
 }
