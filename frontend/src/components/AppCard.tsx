@@ -99,12 +99,6 @@ export function AppCard({ app, disabled = false, disabledLabel, currentVersion, 
           : "hover:border-blue-200 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
       }`}
     >
-      {!disabled ? (
-        <span className="pointer-events-none absolute bottom-4 right-4 rounded-md border border-blue-600 bg-white px-3 py-1.5 text-xs font-semibold text-blue-600 opacity-0 transition-all duration-200 group-hover:opacity-100 group-hover:bg-blue-50">
-          View Details
-        </span>
-      ) : null}
-
       <div>
         <div className="mb-4 flex items-start justify-between">
           <div className="h-12 w-12 flex-shrink-0 rounded-lg shadow-sm">
@@ -147,7 +141,22 @@ export function AppCard({ app, disabled = false, disabledLabel, currentVersion, 
           </span>
         </div>
 
-        <CompatibilityStatus app={app} currentVersion={currentVersion} />
+        <div className="relative h-7 min-w-[144px]">
+          <div
+            className={`absolute inset-0 flex items-center justify-end transition-all duration-200 ${
+              !disabled ? "opacity-100 group-hover:translate-y-1 group-hover:opacity-0" : "opacity-100"
+            }`}
+          >
+            <CompatibilityStatus app={app} currentVersion={currentVersion} />
+          </div>
+          {!disabled ? (
+            <div className="absolute inset-0 flex items-center justify-end opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
+              <span className="rounded-md border border-blue-600 bg-white px-3 py-1.5 text-xs font-semibold text-blue-600 hover:bg-blue-50">
+                View Details
+              </span>
+            </div>
+          ) : null}
+        </div>
       </div>
 
       {disabled && disabledLabel ? <p className="mt-3 text-xs text-gray-400">{disabledLabel}</p> : null}

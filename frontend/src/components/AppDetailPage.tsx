@@ -10,7 +10,6 @@ import { InstallModal } from "@/components/InstallModal";
 import { AppDetailModel, HostingKind } from "@/lib/types";
 
 type TabKey = "Overview" | "Reviews" | "Pricing" | "Support";
-type BillingCycle = "monthly" | "annual";
 
 interface AppDetailPageProps {
   app?: AppDetailModel;
@@ -107,10 +106,27 @@ function OverviewSection({
   );
 }
 
-function PricingSection({ teamSize, setTeamSize }: { teamSize: number; setTeamSize: (value: number) => void }) {
-  const [billingCycle, setBillingCycle] = useState<BillingCycle>("monthly");
-  const standardPerUser = billingCycle === "monthly" ? 10 : 8;
-  const advancedPerUser = billingCycle === "monthly" ? 12 : 9.6;
+function PricingSection({
+  teamSize,
+  setTeamSize,
+  isAnnual,
+  setIsAnnual
+}: {
+  teamSize: number;
+  setTeamSize: (value: number) => void;
+  isAnnual: boolean;
+  setIsAnnual: (value: boolean) => void;
+}) {
+  const STANDARD_RATE = 10;
+  const ADVANCED_RATE = 12;
+  const annualDiscount = 0.8;
+  const standardPerUser = isAnnual ? STANDARD_RATE * annualDiscount : STANDARD_RATE;
+  const advancedPerUser = isAnnual ? ADVANCED_RATE * annualDiscount : ADVANCED_RATE;
+  const multiplier = isAnnual ? 12 : 1;
+  const standardTotal = standardPerUser * teamSize * multiplier;
+  const advancedTotal = advancedPerUser * teamSize * multiplier;
+  const standardAnnualSavings = STANDARD_RATE * teamSize * 12 - standardPerUser * teamSize * 12;
+  const advancedAnnualSavings = ADVANCED_RATE * teamSize * 12 - advancedPerUser * teamSize * 12;
 
   return (
     <section className="mx-auto mt-8 max-w-7xl px-6 pb-12">
@@ -122,8 +138,12 @@ function PricingSection({ teamSize, setTeamSize }: { teamSize: number; setTeamSi
             <input
               type="number"
               min={1}
+              max={10000}
               value={teamSize}
-              onChange={(event) => setTeamSize(Math.max(1, Number(event.target.value || "1")))}
+              onChange={(event) => {
+                const next = Number(event.target.value || "1");
+                setTeamSize(Math.max(1, Math.min(10000, next)));
+              }}
               className="mt-2 block w-40 rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none focus:border-blue-500"
             />
           </label>
@@ -132,21 +152,21 @@ function PricingSection({ teamSize, setTeamSize }: { teamSize: number; setTeamSi
             <div className="mt-2 inline-flex rounded-md border border-gray-200 bg-white p-1">
               <button
                 type="button"
-                onClick={() => setBillingCycle("monthly")}
+                onClick={() => setIsAnnual(false)}
                 className={`rounded px-3 py-1.5 text-sm ${
-                  billingCycle === "monthly" ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-50"
+                  !isAnnual ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-50"
                 }`}
               >
                 Monthly
               </button>
               <button
                 type="button"
-                onClick={() => setBillingCycle("annual")}
+                onClick={() => setIsAnnual(true)}
                 className={`rounded px-3 py-1.5 text-sm ${
-                  billingCycle === "annual" ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-50"
+                  isAnnual ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-50"
                 }`}
               >
-                Annual
+                Annual (-20%)
               </button>
             </div>
           </div>
@@ -156,8 +176,15 @@ function PricingSection({ teamSize, setTeamSize }: { teamSize: number; setTeamSi
           <div className="rounded-xl border border-gray-200 p-5">
             <p className="text-sm font-semibold text-gray-900">Standard</p>
             <p className="mt-3 text-3xl font-bold text-gray-900">${standardPerUser}</p>
-            <p className="text-xs text-gray-500">per user / {billingCycle === "monthly" ? "month" : "month (annual billing)"}</p>
-            <p className="mt-2 text-sm text-gray-600">Estimated total: ${(teamSize * standardPerUser).toFixed(0)}</p>
+            <p className="text-xs text-gray-500">per user / month</p>
+            <p className="mt-2 text-sm text-gray-600">
+              Estimated total: ${standardTotal.toFixed(0)}/{isAnnual ? "yr" : "mo"}
+            </p>
+            {isAnnual ? (
+              <p className="mt-2 inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
+                You save ${standardAnnualSavings.toFixed(0)}/yr
+              </p>
+            ) : null}
             <ul className="mt-4 space-y-2 text-sm text-gray-600">
               <li>Core sync workflows</li>
               <li>Basic field mapping</li>
@@ -170,8 +197,15 @@ function PricingSection({ teamSize, setTeamSize }: { teamSize: number; setTeamSi
             </p>
             <p className="mt-2 text-sm font-semibold text-gray-900">Advanced</p>
             <p className="mt-3 text-3xl font-bold text-gray-900">${advancedPerUser}</p>
-            <p className="text-xs text-gray-500">per user / {billingCycle === "monthly" ? "month" : "month (annual billing)"}</p>
-            <p className="mt-2 text-sm text-gray-600">Estimated total: ${(teamSize * advancedPerUser).toFixed(0)}</p>
+            <p className="text-xs text-gray-500">per user / month</p>
+            <p className="mt-2 text-sm text-gray-600">
+              Estimated total: ${advancedTotal.toFixed(0)}/{isAnnual ? "yr" : "mo"}
+            </p>
+            {isAnnual ? (
+              <p className="mt-2 inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
+                You save ${advancedAnnualSavings.toFixed(0)}/yr
+              </p>
+            ) : null}
             <ul className="mt-4 space-y-2 text-sm text-gray-600">
               <li>Advanced conflict resolution</li>
               <li>Enterprise audit controls</li>
@@ -265,6 +299,7 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
   const [activeTab, setActiveTab] = useState<TabKey>("Overview");
   const [modalOpen, setModalOpen] = useState(false);
   const [teamSize, setTeamSize] = useState(10);
+  const [isAnnual, setIsAnnual] = useState(false);
 
   if (!app) {
     return (
@@ -421,7 +456,12 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
         <OverviewSection app={app} resources={resources} selectedHosting={selectedHosting} />
       ) : null}
       {activeTab === "Pricing" ? (
-        <PricingSection teamSize={teamSize} setTeamSize={setTeamSize} />
+        <PricingSection
+          teamSize={teamSize}
+          setTeamSize={setTeamSize}
+          isAnnual={isAnnual}
+          setIsAnnual={setIsAnnual}
+        />
       ) : null}
       {activeTab === "Reviews" ? <ReviewsSection /> : null}
       {activeTab === "Support" ? <SupportSection /> : null}
