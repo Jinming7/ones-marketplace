@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Header } from "@/components/Header";
-import { AppCard } from "@/components/AppCard";
+import { AppGrid } from "@/components/AppGrid";
 import { FilterBar } from "@/components/FilterBar";
 import { SpotlightSection } from "@/components/SpotlightSection";
 import { marketplaceApps } from "@/lib/mockData";
@@ -96,20 +96,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {filteredApps.map((app) => {
-            const disabled = onPremOnlyMode && !app.supportedHosting?.includes("on-prem");
-            return (
-              <AppCard
-                key={app.key}
-                app={app}
-                currentVersion={currentVersion}
-                disabled={disabled}
-                disabledLabel={disabled ? "Not available for On-Premise" : undefined}
-              />
-            );
-          })}
-        </div>
+        <AppGrid apps={filteredApps} currentVersion={currentVersion} onPremOnlyMode={onPremOnlyMode} />
       </section>
     </main>
   );

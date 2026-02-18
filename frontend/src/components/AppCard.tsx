@@ -14,9 +14,7 @@ type ParsedVersion = [number, number, number];
 
 function parseVersion(version: string): ParsedVersion {
   const match = version.match(/(\d+)\.(\d+)(?:\.(\d+))?/);
-  if (!match) {
-    return [0, 0, 0];
-  }
+  if (!match) return [0, 0, 0];
   return [Number(match[1]), Number(match[2]), Number(match[3] ?? 0)];
 }
 
@@ -50,18 +48,19 @@ function CompatibilityStatus({ app, currentVersion }: { app: AppCardModel; curre
 
   if (!currentVersion || !supportsOnPrem) {
     return (
-      <div className="inline-flex items-center gap-2 rounded-lg border border-emerald-100 bg-white px-2.5 py-1.5 text-xs">
+      <span className="inline-flex items-center gap-1.5 rounded-md bg-emerald-50/50 px-2 py-1 text-xs font-medium text-emerald-600">
         <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-        <span className="font-medium text-slate-700">Compatible: SaaS</span>
-      </div>
+        vSaaS Ready
+      </span>
     );
   }
 
   const { min, max } = parseOnPremRange(app.compatibility?.onPremLabel);
   if (!min && !max) {
     return (
-      <span className="rounded border border-green-100 bg-green-50 px-2 py-1 text-xs font-medium text-green-700">
-        ✅ Compatible: v{currentVersion}
+      <span className="inline-flex items-center gap-1.5 rounded-md bg-emerald-50/50 px-2 py-1 text-xs font-medium text-emerald-600">
+        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+        v{currentVersion} Ready
       </span>
     );
   }
@@ -72,18 +71,18 @@ function CompatibilityStatus({ app, currentVersion }: { app: AppCardModel; curre
 
   if (compatible) {
     return (
-      <div className="inline-flex items-center gap-2 rounded-lg border border-emerald-100 bg-white px-2.5 py-1.5 text-xs">
+      <span className="inline-flex items-center gap-1.5 rounded-md bg-emerald-50/50 px-2 py-1 text-xs font-medium text-emerald-600">
         <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-        <span className="font-medium text-slate-700">Compatible: {currentVersion}</span>
-      </div>
+        v{currentVersion} Ready
+      </span>
     );
   }
 
   return (
-    <div className="inline-flex items-center gap-2 rounded-lg border border-amber-100 bg-white px-2.5 py-1.5 text-xs">
+    <span className="inline-flex items-center gap-1.5 rounded-md bg-amber-50/50 px-2 py-1 text-xs font-medium text-amber-600">
       <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
-      <span className="font-medium text-slate-700">Requires {app.compatibility?.onPremLabel ?? "v7.0"}</span>
-    </div>
+      Requires {app.compatibility?.onPremLabel ?? "v5.x"}
+    </span>
   );
 }
 
@@ -96,63 +95,63 @@ export function AppCard({ app, disabled = false, disabledLabel, currentVersion }
       onClick={(event) => {
         if (disabled) event.preventDefault();
       }}
-      className={`group relative block overflow-hidden rounded-xl border border-gray-100 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all duration-300 ${
-        disabled ? "cursor-not-allowed opacity-60 grayscale" : "hover:-translate-y-1 hover:shadow-xl"
+      className={`group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 transition-all duration-300 ${
+        disabled
+          ? "cursor-not-allowed opacity-60 grayscale"
+          : "hover:border-blue-200 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
       }`}
     >
-      <div className="flex gap-4 p-5">
-        <div className="h-14 w-14 flex-shrink-0 rounded-xl border border-gray-100 bg-white shadow-sm">
+      <span className="pointer-events-none absolute right-4 top-4 translate-y-[-4px] rounded-full bg-blue-600 px-3 py-1.5 text-xs font-bold text-white opacity-0 shadow-lg transition-all group-hover:opacity-100">
+        Install
+      </span>
+
+      <div className="flex gap-4">
+        <div className="mr-4 h-14 w-14 flex-shrink-0 rounded-xl border border-gray-100 bg-white shadow-sm">
           <AppIcon name={app.name} category={app.category} />
         </div>
 
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
-            <h3 className="truncate text-lg font-bold tracking-tight text-gray-900">{app.name}</h3>
-            <div className="flex flex-col items-end gap-1">
+            <h3 className="truncate text-base font-bold leading-tight tracking-tight text-gray-900 transition-colors group-hover:text-blue-600">
+              {app.name}
+            </h3>
+            <div className="flex items-center gap-1.5">
               {app.spotlight ? (
-                <span className="rounded border border-purple-100 bg-purple-50 px-1.5 py-0.5 text-[10px] font-bold uppercase text-purple-700">
+                <span className="rounded-full bg-purple-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-purple-600">
                   {app.spotlight}
                 </span>
               ) : null}
               {isCloudFortified ? (
-                <span className="inline-flex items-center gap-1 rounded border border-blue-100 bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold uppercase text-blue-700">
+                <span className="inline-flex items-center gap-1 rounded-full border border-blue-100 bg-blue-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-blue-700">
                   <ShieldCheck className="h-3 w-3" />
-                  Cloud Fortified
+                  Cloud
                 </span>
               ) : null}
             </div>
           </div>
 
-          <p className="mb-1 mt-1 text-xs font-medium text-gray-500">By {app.partnerName}</p>
-          <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-gray-600">{app.summary}</p>
+          <p className="mt-1 text-xs font-medium text-gray-400">{app.partnerName}</p>
+          <p className="mt-3 h-10 line-clamp-2 text-sm leading-relaxed text-gray-500">{app.summary}</p>
         </div>
       </div>
 
-      <div className="flex items-center gap-4 border-b border-gray-50 border-opacity-50 px-5 pb-4 text-xs text-gray-500">
-        <span className="inline-flex items-center gap-1">
-          <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-          <span className="font-bold text-gray-900">{app.rating.toFixed(1)}</span>
-        </span>
-        <span className="inline-flex items-center gap-1">
-          <Download className="h-4 w-4" />
-          {Math.round(app.installs / 1000)}k installs
-        </span>
-        {app.category ? <span className="text-gray-500">#{app.category}</span> : null}
-      </div>
-
-      <div className="flex items-center justify-between border-t border-gray-100/80 bg-white px-5 py-3">
-        <div className="flex flex-col items-start gap-1">
-          <CompatibilityStatus app={app} currentVersion={currentVersion} />
-          {app.compatibility?.testedOn ? (
-            <span className="text-[11px] text-gray-400">{app.compatibility.testedOn}</span>
-          ) : null}
-          {disabled && disabledLabel ? <span className="text-xs text-gray-500">{disabledLabel}</span> : null}
+      <div className="mt-4 flex items-center justify-between border-t border-gray-50 pt-3">
+        <div className="flex items-center gap-3 text-xs">
+          <span className="inline-flex items-center gap-1 text-gray-700">
+            <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+            <span className="font-semibold">{app.rating.toFixed(1)}</span>
+          </span>
+          <span className="inline-flex items-center gap-1 text-gray-400">
+            <Download className="h-3.5 w-3.5" />
+            {Math.round(app.installs / 1000)}k
+          </span>
+          {app.category ? <span className="text-gray-400">#{app.category}</span> : null}
         </div>
 
-        <span className="translate-x-2 text-xs font-semibold text-blue-600 opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
-          Install
-        </span>
+        <CompatibilityStatus app={app} currentVersion={currentVersion} />
       </div>
+
+      {disabled && disabledLabel ? <p className="mt-2 text-xs text-gray-400">{disabledLabel}</p> : null}
     </Link>
   );
 }
