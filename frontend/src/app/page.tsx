@@ -7,10 +7,13 @@ import { FilterBar } from "@/components/FilterBar";
 import { SpotlightSection } from "@/components/SpotlightSection";
 import { marketplaceApps } from "@/lib/mockData";
 
+const versions = ["5.4.3", "6.2.0", "6.10.1", "7.0.0"];
+
 export default function HomePage() {
   const [search, setSearch] = useState("");
   const [selectedHostings, setSelectedHostings] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [currentVersion, setCurrentVersion] = useState("6.10.1");
 
   const categoryOptions = useMemo(() => {
     const unique = Array.from(new Set(marketplaceApps.map((item) => item.category).filter(Boolean))) as string[];
@@ -74,9 +77,23 @@ export default function HomePage() {
       <SpotlightSection />
 
       <section className="mx-auto max-w-7xl px-6 pb-10">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-xl font-semibold tracking-tight text-slate-900">All Apps</h2>
-          <span className="text-sm text-slate-500">{filteredApps.length} apps</span>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-slate-500">Current ONES version</span>
+            <select
+              value={currentVersion}
+              onChange={(event) => setCurrentVersion(event.target.value)}
+              className="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-sm text-slate-700 outline-none focus:border-blue-400"
+            >
+              {versions.map((version) => (
+                <option key={version} value={version}>
+                  v{version}
+                </option>
+              ))}
+            </select>
+            <span className="text-sm text-slate-500">{filteredApps.length} apps</span>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -86,6 +103,7 @@ export default function HomePage() {
               <AppCard
                 key={app.key}
                 app={app}
+                currentVersion={currentVersion}
                 disabled={disabled}
                 disabledLabel={disabled ? "Not available for On-Premise" : undefined}
               />

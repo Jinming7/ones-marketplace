@@ -7,6 +7,57 @@ interface AppCardProps {
   app: AppCardModel;
   disabled?: boolean;
   disabledLabel?: string;
+  currentVersion?: string;
+}
+
+type ParsedVersion = [number, number, number];
+
+function parseVersion(version: string): ParsedVersion {
+  const match = version.match(/(\d+)\.(\d+)(?:\.(\d+))?/);
+  if (!match) {
+    return [0, 0, 0];
+  }
+
+  return [Number(match[1]), Number(match[2]), Number(match[3] ?? 0)];
+}
+
+function compareVersion(a: string, b: string): number {
+  const pa = parseVersion(a);
+  const pb = parseVersion(b);
+
+  for (let i = 0; i < 3; i += 1) {
+    if (pa[i] > pb[i]) {
+      return 1;
+    }
+    if (pa[i] < pb[i]) {
+      return -1;
+    }
+  }
+
+  return 0;
+}
+
+function parseOnPremLabelRange(label?: string): { min?: string; max?: string } {
+  if (!label) {
+    return {};
+  }
+
+  const plusMatch = label.match(/(\d+\.\d+)\+/);
+  if (plusMatch) {
+    return { min: plusMatch[1] };
+  }
+
+  const rangeMatch = label.match(/(\d+\.\d+)\s*-\s*(\d+\.\d+)/);
+  if (rangeMatch) {
+    return { min: rangeMatch[1], max: rangeMatch[2] };
+  }
+
+  const single = label.match(/(\d+\.\d+(?:\.\d+)?)/);
+  if (single) {
+    return { min: single[1], max: single[1] };
+  }
+
+  return {};
 }
 
 function CompatibilityBadges({ app }: { app: AppCardModel }) {
@@ -58,7 +109,38 @@ function CompatibilityBadges({ app }: { app: AppCardModel }) {
   );
 }
 
-export function AppCard({ app, disabled = false, disabledLabel }: AppCardProps) {
+function VersionCompatibilityStatus({
+  app,
+  currentVersion
+}: {
+  app: AppCardModel;
+  currentVersion?: string;
+}) {
+  if (!currentVersion || !(app.supportedHosting?.includes("on-prem") ?? false)) {
+    return null;
+  }
+
+  const { min, max } = parseOnPremLabelRange(app.compatibility?.onPremLabel);
+
+  if (!min && !max) {
+    return null;
+  }
+
+  const lowerOk = min ? compareVersion(currentVersion, min) >= 0 : true;
+  const upperOk = max ? compareVersion(currentVersion, max) <= 0 : true;
+  const compatible = lowerOk && upperOk;
+
+  return (
+    <span
+      className={`text-xs font-medium ${compatible ? "text-emerald-700" : "text-red-600"}`}
+      title={`Current ONES version: ${currentVersion}`}
+    >
+      {compatible ? `Compatible with v${currentVersion}` : `Incompatible with v${currentVersion}`}
+    </span>
+  );
+}
+
+export function AppCard({ app, disabled = false, disabledLabel, currentVersion }: AppCardProps) {
   const isCloudFortified = app.programs.some((program) => program.code === "CLOUD_FORTIFIED");
 
   return (
@@ -128,9 +210,12 @@ export function AppCard({ app, disabled = false, disabledLabel }: AppCardProps) 
             </p>
           </div>
 
-          <div className="mt-3 border-t border-gray-100 pt-3 flex items-center justify-between gap-2">
-            <CompatibilityBadges app={app} />
-            {disabled && disabledLabel ? <span className="text-xs text-gray-500">{disabledLabel}</span> : null}
+          <div className="mt-3 border-t border-gray-100 pt-3 flex flex-col gap-2">
+            <div className="flex items-center justify-between gap-2">
+              <CompatibilityBadges app={app} />
+              {disabled && disabledLabel ? <span className="text-xs text-gray-500">{disabledLabel}</span> : null}
+            </div>
+            <VersionCompatibilityStatus app={app} currentVersion={currentVersion} />
           </div>
         </div>
       </div>
