@@ -5,6 +5,13 @@ export interface AppProgram {
   label: string;
 }
 
+export interface AppCompatibility {
+  cloudLabel?: string;
+  onPremLabel?: string;
+  testedOn?: string;
+  warning?: boolean;
+}
+
 export interface AppCardModel {
   key: string;
   logoUrl: string;
@@ -17,6 +24,7 @@ export interface AppCardModel {
   category?: string;
   supportedHosting?: HostingKind[];
   spotlight?: string;
+  compatibility?: AppCompatibility;
 }
 
 export interface SecurityInfo {

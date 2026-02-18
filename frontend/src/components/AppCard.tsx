@@ -1,12 +1,61 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Download, ShieldCheck, Star } from "lucide-react";
 import { AppCardModel } from "@/lib/types";
+import { AppIcon } from "./AppIcon";
 
 interface AppCardProps {
   app: AppCardModel;
   disabled?: boolean;
   disabledLabel?: string;
+}
+
+function CompatibilityBadges({ app }: { app: AppCardModel }) {
+  const supportsCloud = app.supportedHosting?.includes("cloud") ?? false;
+  const supportsOnPrem = app.supportedHosting?.includes("on-prem") ?? false;
+  const testedOn = app.compatibility?.testedOn;
+  const warning = app.compatibility?.warning;
+
+  if (supportsCloud && supportsOnPrem) {
+    return (
+      <div className="flex flex-wrap gap-2" title={testedOn}>
+        <span className="rounded bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">☁️ {app.compatibility?.cloudLabel ?? "Cloud Ready"}</span>
+        <span
+          className={`rounded px-2 py-0.5 text-xs font-medium ${
+            warning ? "bg-amber-100 text-amber-700" : "bg-gray-100 text-gray-600"
+          }`}
+        >
+          💾 {app.compatibility?.onPremLabel ?? "ONES 6.0+"}
+        </span>
+      </div>
+    );
+  }
+
+  if (supportsCloud) {
+    return (
+      <span className="rounded bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700" title={testedOn}>
+        ☁️ {app.compatibility?.cloudLabel ?? "Cloud Ready"}
+      </span>
+    );
+  }
+
+  if (supportsOnPrem) {
+    return (
+      <span
+        className={`rounded px-2 py-0.5 text-xs font-medium ${
+          warning ? "bg-amber-100 text-amber-700" : "bg-gray-100 text-gray-600"
+        }`}
+        title={testedOn}
+      >
+        💾 {app.compatibility?.onPremLabel ?? "ONES 6.0+"}
+      </span>
+    );
+  }
+
+  return (
+    <span className="rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600" title={testedOn}>
+      All Platforms
+    </span>
+  );
 }
 
 export function AppCard({ app, disabled = false, disabledLabel }: AppCardProps) {
@@ -25,13 +74,7 @@ export function AppCard({ app, disabled = false, disabledLabel }: AppCardProps) 
       }`}
     >
       <div className="flex gap-3">
-        <Image
-          src={app.logoUrl}
-          alt={`${app.name} logo`}
-          width={56}
-          height={56}
-          className="h-14 w-14 rounded-xl border border-gray-100 object-cover shadow-sm"
-        />
+        <AppIcon name={app.name} category={app.category} />
 
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
@@ -51,7 +94,7 @@ export function AppCard({ app, disabled = false, disabledLabel }: AppCardProps) 
             </div>
           </div>
 
-          <p className="mt-1 line-clamp-2 text-sm text-gray-500">{app.summary}</p>
+          <p className="mt-1 line-clamp-2 h-10 text-sm text-gray-500">{app.summary}</p>
 
           <div className="mt-2 flex flex-wrap gap-1.5">
             {app.category ? (
@@ -83,7 +126,11 @@ export function AppCard({ app, disabled = false, disabledLabel }: AppCardProps) 
             <p className="mt-2 text-xs text-gray-400">
               By <span className="font-semibold text-gray-600">{app.partnerName}</span>
             </p>
-            {disabled && disabledLabel ? <p className="mt-1 text-xs text-gray-500">{disabledLabel}</p> : null}
+          </div>
+
+          <div className="mt-3 border-t border-gray-100 pt-3 flex items-center justify-between gap-2">
+            <CompatibilityBadges app={app} />
+            {disabled && disabledLabel ? <span className="text-xs text-gray-500">{disabledLabel}</span> : null}
           </div>
         </div>
       </div>
