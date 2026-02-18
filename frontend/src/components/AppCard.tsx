@@ -8,10 +8,12 @@ interface AppCardProps {
 }
 
 export function AppCard({ app }: AppCardProps) {
+  const primaryTag = app.programs[0]?.label;
+
   return (
     <Link
       href={`/apps/${app.key}`}
-      className="group block rounded-2xl border border-slate-200 bg-white p-5 shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-xl"
+      className="group block cursor-pointer rounded-xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
     >
       <div className="mb-4 flex items-start gap-3">
         <Image
@@ -19,36 +21,37 @@ export function AppCard({ app }: AppCardProps) {
           alt={`${app.name} logo`}
           width={56}
           height={56}
-          className="h-14 w-14 rounded-xl border border-slate-200 object-cover"
+          className="h-14 w-14 rounded-lg bg-gray-50 object-cover p-1"
         />
         <div className="min-w-0">
-          <h3 className="truncate text-lg font-semibold text-slate-900">{app.name}</h3>
-          <p className="text-sm text-slate-500">{app.partnerName}</p>
+          <h3 className="truncate text-lg font-semibold text-gray-900">{app.name}</h3>
+          {primaryTag ? (
+            <span className="mt-1 inline-flex rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700">
+              {primaryTag}
+            </span>
+          ) : null}
         </div>
       </div>
 
-      <p className="line-clamp-2 text-sm leading-6 text-slate-700">{app.summary}</p>
+      <p className="mt-2 h-10 line-clamp-2 text-sm text-gray-500">{app.summary}</p>
 
-      <div className="mt-4 flex flex-wrap gap-2">
-        {app.programs.map((program) => (
-          <span
-            key={program.code}
-            className="rounded-full bg-brand-50 px-3 py-1 text-xs font-medium text-brand-700"
-          >
-            {program.label}
+      <div className="mt-4 border-t border-gray-100 pt-3">
+        <div className="text-xs text-gray-400">{app.partnerName}</div>
+        <div className="mt-2 flex items-center justify-between">
+          <div className="flex items-center gap-3 text-sm text-gray-600">
+            <span className="inline-flex items-center gap-1">
+              <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+              {app.rating.toFixed(1)}
+            </span>
+            <span className="inline-flex items-center gap-1">
+              <Download className="h-4 w-4 text-gray-500" />
+              {Math.round(app.installs / 1000)}k
+            </span>
+          </div>
+          <span className="rounded-full border border-blue-100 px-3 py-1 text-xs font-medium text-blue-700 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            Install
           </span>
-        ))}
-      </div>
-
-      <div className="mt-5 flex items-center gap-4 border-t border-slate-100 pt-4 text-sm text-slate-600">
-        <span className="inline-flex items-center gap-1">
-          <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-          {app.rating.toFixed(1)}
-        </span>
-        <span className="inline-flex items-center gap-1">
-          <Download className="h-4 w-4 text-slate-500" />
-          {app.installs.toLocaleString()} installs
-        </span>
+        </div>
       </div>
     </Link>
   );
