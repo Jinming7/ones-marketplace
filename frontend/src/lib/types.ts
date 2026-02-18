@@ -1,6 +1,15 @@
+export type HostingKind = "cloud" | "on-prem";
+
 export interface AppProgram {
   code: string;
   label: string;
+}
+
+export interface AppCompatibility {
+  cloudLabel?: string;
+  onPremLabel?: string;
+  testedOn?: string;
+  warning?: boolean;
 }
 
 export interface AppCardModel {
@@ -12,6 +21,10 @@ export interface AppCardModel {
   installs: number;
   summary: string;
   programs: AppProgram[];
+  category?: string;
+  supportedHosting?: HostingKind[];
+  spotlight?: string;
+  compatibility?: AppCompatibility;
 }
 
 export interface SecurityInfo {
