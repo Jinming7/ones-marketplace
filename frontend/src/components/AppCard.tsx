@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Download, ShieldCheck, Star } from "lucide-react";
 import { AppCardModel } from "@/lib/types";
 import { AppIcon } from "./AppIcon";
@@ -8,6 +7,7 @@ interface AppCardProps {
   disabled?: boolean;
   disabledLabel?: string;
   currentVersion?: string;
+  onSelect?: (appId: string) => void;
 }
 
 type ParsedVersion = [number, number, number];
@@ -30,29 +30,35 @@ function compareVersion(a: string, b: string): number {
 
 function parseOnPremRange(label?: string): { min?: string; max?: string } {
   if (!label) return {};
-
   const plus = label.match(/(\d+\.\d+)\+/);
   if (plus) return { min: plus[1] };
-
   const range = label.match(/(\d+\.\d+)\s*-\s*(\d+\.\d+)/);
   if (range) return { min: range[1], max: range[2] };
-
   const single = label.match(/(\d+\.\d+(?:\.\d+)?)/);
   if (single) return { min: single[1], max: single[1] };
-
   return {};
 }
 
-function compatibilityText(app: AppCardModel, currentVersion?: string): string {
+function CompatibilityStatus({ app, currentVersion }: { app: AppCardModel; currentVersion?: string }) {
   const supportsOnPrem = app.supportedHosting?.includes("on-prem") ?? false;
 
   if (!currentVersion || !supportsOnPrem) {
-    return "SaaS Ready";
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-md border border-blue-100/50 bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700">
+        <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-500" />
+        SaaS Ready
+      </span>
+    );
   }
 
   const { min, max } = parseOnPremRange(app.compatibility?.onPremLabel);
   if (!min && !max) {
-    return `v${currentVersion} Ready`;
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-md border border-emerald-100/50 bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">
+        <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
+        v{currentVersion} Ready
+      </span>
+    );
   }
 
   const lowerOk = min ? compareVersion(currentVersion, min) >= 0 : true;
@@ -60,25 +66,43 @@ function compatibilityText(app: AppCardModel, currentVersion?: string): string {
   const compatible = lowerOk && upperOk;
 
   if (compatible) {
-    return `v${currentVersion} Ready`;
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-md border border-emerald-100/50 bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">
+        <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
+        v{currentVersion} Ready
+      </span>
+    );
   }
 
-  return `Needs ${app.compatibility?.onPremLabel ?? "v7.0"}`;
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-md border border-amber-100/50 bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700">
+      <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-500" />
+      Requires v5.x
+    </span>
+  );
 }
 
-export function AppCard({ app, disabled = false, disabledLabel, currentVersion }: AppCardProps) {
+export function AppCard({ app, disabled = false, disabledLabel, currentVersion, onSelect }: AppCardProps) {
   const isCloudFortified = app.programs.some((program) => program.code === "CLOUD_FORTIFIED");
 
   return (
-    <Link
-      href={disabled ? "#" : `/apps/${app.key}`}
-      onClick={(event) => {
-        if (disabled) event.preventDefault();
+    <button
+      type="button"
+      onClick={() => {
+        if (!disabled && onSelect) {
+          onSelect(app.id);
+        }
       }}
-      className={`group relative flex h-full flex-col justify-between rounded-2xl border border-gray-100 bg-white p-6 transition-shadow ${
-        disabled ? "cursor-not-allowed opacity-60 grayscale" : "hover:shadow-lg"
+      className={`group relative w-full overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 text-left transition-all duration-300 ${
+        disabled
+          ? "cursor-not-allowed opacity-60 grayscale"
+          : "hover:border-blue-200 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
       }`}
     >
+      <span className="pointer-events-none absolute right-4 top-4 translate-y-[-4px] rounded-full bg-blue-600 px-3 py-1.5 text-xs font-bold text-white opacity-0 shadow-lg transition-all group-hover:opacity-100">
+        Install
+      </span>
+
       <div>
         <div className="mb-4 flex items-start justify-between">
           <div className="h-12 w-12 flex-shrink-0 rounded-lg shadow-sm">
@@ -109,7 +133,7 @@ export function AppCard({ app, disabled = false, disabledLabel, currentVersion }
         </div>
       </div>
 
-      <div className="pt-4 border-t border-gray-50 flex items-center justify-between">
+      <div className="border-t border-gray-50 pt-4 flex items-center justify-between">
         <div className="flex items-center gap-3 text-xs font-medium text-gray-500">
           <span className="inline-flex items-center gap-1">
             <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
@@ -121,12 +145,10 @@ export function AppCard({ app, disabled = false, disabledLabel, currentVersion }
           </span>
         </div>
 
-        <span className="whitespace-nowrap rounded border border-gray-100 bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600">
-          {compatibilityText(app, currentVersion)}
-        </span>
+        <CompatibilityStatus app={app} currentVersion={currentVersion} />
       </div>
 
       {disabled && disabledLabel ? <p className="mt-3 text-xs text-gray-400">{disabledLabel}</p> : null}
-    </Link>
+    </button>
   );
 }

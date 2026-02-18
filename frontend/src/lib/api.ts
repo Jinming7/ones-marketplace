@@ -32,6 +32,11 @@ export async function getAppDetail(appKey: string): Promise<AppDetailModel> {
         : data.hosting === "HYBRID"
           ? ["cloud", "on-prem"]
           : ["cloud"],
+    detailImages: Array.isArray(data.detailImages) ? data.detailImages : ["Overview", "Config", "Logs"],
+    longDescription:
+      typeof data.longDescription === "string"
+        ? data.longDescription
+        : `<h3>${data.name ?? "App Overview"}</h3><p>${data.summary ?? ""}</p>`,
     description: data.description,
     pricingModel: data.pricingModel,
     partner: data.partner,

@@ -1,19 +1,59 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { ArrowLeft } from "lucide-react";
 import { Header } from "@/components/Header";
 import { AppGrid } from "@/components/AppGrid";
 import { FilterBar } from "@/components/FilterBar";
 import { SpotlightSection } from "@/components/SpotlightSection";
 import { marketplaceApps } from "@/lib/mockData";
+import { AppCardModel } from "@/lib/types";
 
 const versions = ["5.4.3", "6.2.0", "6.10.1", "7.0.0"];
+
+function AppDetailView({ app, onBack }: { app: AppCardModel; onBack: () => void }) {
+  return (
+    <section className="mx-auto max-w-7xl px-6 py-8">
+      <button
+        type="button"
+        onClick={onBack}
+        className="mb-5 inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:underline"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back to Marketplace
+      </button>
+
+      <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+        <h2 className="text-3xl font-bold tracking-tight text-slate-900">{app.name}</h2>
+        <p className="mt-2 text-sm text-slate-500">By {app.partnerName}</p>
+
+        <div className="mt-5 grid gap-3 md:grid-cols-3">
+          {app.detailImages.map((item) => (
+            <div key={item} className="aspect-video rounded-xl border border-gray-100 bg-gray-50 text-sm text-gray-500 flex items-center justify-center">
+              {item}
+            </div>
+          ))}
+        </div>
+
+        <div className="prose prose-sm mt-6 max-w-none text-gray-600" dangerouslySetInnerHTML={{ __html: app.longDescription }} />
+
+        <div className="mt-6 grid gap-3 text-sm text-gray-600 md:grid-cols-3">
+          <div className="rounded-lg bg-gray-50 p-3">Rating: {app.rating.toFixed(1)}</div>
+          <div className="rounded-lg bg-gray-50 p-3">Installs: {Math.round(app.installs / 1000)}k</div>
+          <div className="rounded-lg bg-gray-50 p-3">Compatibility: {app.compatibility?.onPremLabel ?? app.compatibility?.cloudLabel ?? "N/A"}</div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default function HomePage() {
   const [search, setSearch] = useState("");
   const [selectedHostings, setSelectedHostings] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [currentVersion, setCurrentVersion] = useState("6.10.1");
+  const [currentView, setCurrentView] = useState<"home" | "detail">("home");
+  const [selectedAppId, setSelectedAppId] = useState<string | null>(null);
 
   const categoryOptions = useMemo(() => {
     const unique = Array.from(new Set(marketplaceApps.map((item) => item.category).filter(Boolean))) as string[];
@@ -44,6 +84,26 @@ export default function HomePage() {
       return bySearch && byCategory && byHosting;
     });
   }, [search, selectedCategories, selectedHostings]);
+
+  const selectedApp = useMemo(
+    () => marketplaceApps.find((item) => item.id === selectedAppId),
+    [selectedAppId]
+  );
+
+  if (currentView === "detail" && selectedApp) {
+    return (
+      <main className="min-h-screen bg-slate-50">
+        <Header showLogin showPartnerPortal />
+        <AppDetailView
+          app={selectedApp}
+          onBack={() => {
+            setCurrentView("home");
+            setSelectedAppId(null);
+          }}
+        />
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -96,7 +156,15 @@ export default function HomePage() {
           </div>
         </div>
 
-        <AppGrid apps={filteredApps} currentVersion={currentVersion} onPremOnlyMode={onPremOnlyMode} />
+        <AppGrid
+          apps={filteredApps}
+          currentVersion={currentVersion}
+          onPremOnlyMode={onPremOnlyMode}
+          onSelectApp={(appId) => {
+            setSelectedAppId(appId);
+            setCurrentView("detail");
+          }}
+        />
       </section>
     </main>
   );

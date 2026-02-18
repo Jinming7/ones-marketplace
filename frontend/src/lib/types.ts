@@ -13,6 +13,7 @@ export interface AppCompatibility {
 }
 
 export interface AppCardModel {
+  id: string;
   key: string;
   logoUrl: string;
   name: string;
@@ -25,6 +26,8 @@ export interface AppCardModel {
   supportedHosting?: HostingKind[];
   spotlight?: string;
   compatibility?: AppCompatibility;
+  detailImages: string[];
+  longDescription: string;
 }
 
 export interface SecurityInfo {
@@ -48,7 +51,6 @@ export interface SecurityInfo {
 }
 
 export interface AppDetailModel extends AppCardModel {
-  id: string;
   description?: string;
   pricingModel?: string;
   partner?: {
