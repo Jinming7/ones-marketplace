@@ -50,9 +50,10 @@ function CompatibilityStatus({ app, currentVersion }: { app: AppCardModel; curre
 
   if (!currentVersion || !supportsOnPrem) {
     return (
-      <span className="rounded border border-green-100 bg-green-50 px-2 py-1 text-xs font-medium text-green-700">
-        ✅ Compatible: SaaS
-      </span>
+      <div className="inline-flex items-center gap-2 rounded-lg border border-emerald-100 bg-white px-2.5 py-1.5 text-xs">
+        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+        <span className="font-medium text-slate-700">Compatible: SaaS</span>
+      </div>
     );
   }
 
@@ -71,16 +72,18 @@ function CompatibilityStatus({ app, currentVersion }: { app: AppCardModel; curre
 
   if (compatible) {
     return (
-      <span className="rounded border border-green-100 bg-green-50 px-2 py-1 text-xs font-medium text-green-700">
-        ✅ Compatible: {currentVersion}
-      </span>
+      <div className="inline-flex items-center gap-2 rounded-lg border border-emerald-100 bg-white px-2.5 py-1.5 text-xs">
+        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+        <span className="font-medium text-slate-700">Compatible: {currentVersion}</span>
+      </div>
     );
   }
 
   return (
-    <span className="rounded border border-amber-100 bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700">
-      ⚠️ Requires {app.compatibility?.onPremLabel ?? "v7.0"}
-    </span>
+    <div className="inline-flex items-center gap-2 rounded-lg border border-amber-100 bg-white px-2.5 py-1.5 text-xs">
+      <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+      <span className="font-medium text-slate-700">Requires {app.compatibility?.onPremLabel ?? "v7.0"}</span>
+    </div>
   );
 }
 
@@ -137,13 +140,16 @@ export function AppCard({ app, disabled = false, disabledLabel, currentVersion }
         {app.category ? <span className="text-gray-500">#{app.category}</span> : null}
       </div>
 
-      <div className="flex items-center justify-between bg-gray-50/50 px-5 py-3">
-        <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between border-t border-gray-100/80 bg-white px-5 py-3">
+        <div className="flex flex-col items-start gap-1">
           <CompatibilityStatus app={app} currentVersion={currentVersion} />
+          {app.compatibility?.testedOn ? (
+            <span className="text-[11px] text-gray-400">{app.compatibility.testedOn}</span>
+          ) : null}
           {disabled && disabledLabel ? <span className="text-xs text-gray-500">{disabledLabel}</span> : null}
         </div>
 
-        <span className="translate-x-2 text-xs font-semibold text-blue-600 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100">
+        <span className="translate-x-2 text-xs font-semibold text-blue-600 opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
           Install
         </span>
       </div>
