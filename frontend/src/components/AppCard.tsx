@@ -5,15 +5,26 @@ import { AppCardModel } from "@/lib/types";
 
 interface AppCardProps {
   app: AppCardModel;
+  disabled?: boolean;
+  disabledLabel?: string;
 }
 
-export function AppCard({ app }: AppCardProps) {
+export function AppCard({ app, disabled = false, disabledLabel }: AppCardProps) {
   const primaryTag = app.programs[0]?.label;
 
   return (
     <Link
-      href={`/apps/${app.key}`}
-      className="group block cursor-pointer rounded-xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+      href={disabled ? "#" : `/apps/${app.key}`}
+      onClick={(event) => {
+        if (disabled) {
+          event.preventDefault();
+        }
+      }}
+      className={`group block cursor-pointer rounded-xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 ${
+        disabled
+          ? "opacity-55 grayscale"
+          : "hover:-translate-y-1 hover:shadow-xl"
+      }`}
     >
       <div className="mb-4 flex items-start gap-3">
         <Image
@@ -49,9 +60,10 @@ export function AppCard({ app }: AppCardProps) {
             </span>
           </div>
           <span className="rounded-full border border-blue-100 px-3 py-1 text-xs font-medium text-blue-700 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-            Install
+            {disabled ? "Unavailable" : "Install"}
           </span>
         </div>
+        {disabled && disabledLabel ? <p className="mt-2 text-xs text-slate-500">{disabledLabel}</p> : null}
       </div>
     </Link>
   );

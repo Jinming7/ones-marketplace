@@ -26,6 +26,12 @@ export async function getAppDetail(appKey: string): Promise<AppDetailModel> {
       code,
       label: code.replaceAll("_", " ")
     })),
+    supportedHosting:
+      data.hosting === "ONPREM"
+        ? ["on-prem"]
+        : data.hosting === "HYBRID"
+          ? ["cloud", "on-prem"]
+          : ["cloud"],
     description: data.description,
     pricingModel: data.pricingModel,
     partner: data.partner,
