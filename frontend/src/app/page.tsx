@@ -73,7 +73,7 @@ export default function HomePage() {
       <Header showLogin showPartnerPortal />
 
       <section
-        className="relative overflow-hidden border-b border-slate-200"
+        className="relative overflow-visible border-b border-slate-200"
         style={{
           background: "radial-gradient(circle at 35% 20%, #ffffff 0%, #ffffff 38%, #eff6ff 100%)"
         }}
@@ -95,7 +95,7 @@ export default function HomePage() {
             Browse enterprise-ready integrations, automation, and reporting extensions for ONES.
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center gap-3">
+          <div className="relative z-20 mt-8 flex flex-wrap items-center gap-3">
             <div className="flex min-w-[320px] flex-1 items-center rounded-full border border-slate-200 bg-white p-2 shadow-md shadow-slate-200/60">
               <Search className="ml-3 h-5 w-5 text-slate-400" />
               <input
