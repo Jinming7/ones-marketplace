@@ -2,6 +2,7 @@
 
 import { CheckCircle2 } from "lucide-react";
 import { useState } from "react";
+import { CustomSelect } from "@/components/CustomSelect";
 
 interface InstallModalProps {
   isOpen: boolean;
@@ -30,14 +31,16 @@ export function InstallModal({ isOpen, appName, onClose, onSuccess }: InstallMod
         <div className="mt-6 space-y-5">
           <div>
             <label className="text-sm font-medium text-slate-700">Select Team</label>
-            <select
+            <CustomSelect
               value={team}
-              onChange={(event) => setTeam(event.target.value)}
-              className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-blue-500"
-            >
-              <option>Engineering A</option>
-              <option>Design B</option>
-            </select>
+              onChange={setTeam}
+              options={[
+                { value: "Engineering A", label: "Engineering A" },
+                { value: "Design B", label: "Design B" },
+                { value: "Sandbox", label: "Sandbox" }
+              ]}
+              className="mt-2"
+            />
           </div>
 
           <div>

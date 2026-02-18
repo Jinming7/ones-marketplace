@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Header } from "@/components/Header";
 import { AppDetailPage } from "@/components/AppDetailPage";
+import { CustomSelect } from "@/components/CustomSelect";
 import { AppGrid } from "@/components/AppGrid";
 import { FilterBar } from "@/components/FilterBar";
 import { SpotlightSection } from "@/components/SpotlightSection";
@@ -115,17 +116,13 @@ export default function HomePage() {
           <h2 className="text-xl font-semibold tracking-tight text-slate-900">All Apps</h2>
           <div className="flex items-center gap-3">
             <span className="text-sm text-slate-500">Current ONES version</span>
-            <select
+            <CustomSelect
               value={currentVersion}
-              onChange={(event) => setCurrentVersion(event.target.value)}
-              className="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-sm text-slate-700 outline-none focus:border-blue-400"
-            >
-              {versions.map((version) => (
-                <option key={version} value={version}>
-                  v{version}
-                </option>
-              ))}
-            </select>
+              onChange={setCurrentVersion}
+              options={versions.map((version) => ({ value: version, label: `v${version}` }))}
+              className="w-[120px]"
+              triggerClassName="rounded-full"
+            />
             <span className="text-sm text-slate-500">{filteredApps.length} apps</span>
           </div>
         </div>

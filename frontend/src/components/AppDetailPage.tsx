@@ -5,10 +5,12 @@ import { useMemo, useState } from "react";
 import { CheckCircle2, Download, ExternalLink, ShieldCheck, Star, Users } from "lucide-react";
 import { Header } from "@/components/Header";
 import { AppIcon } from "@/components/AppIcon";
+import { CustomSelect } from "@/components/CustomSelect";
 import { InstallModal } from "@/components/InstallModal";
 import { AppDetailModel, HostingKind } from "@/lib/types";
 
 type TabKey = "Overview" | "Reviews" | "Pricing" | "Support";
+type BillingCycle = "monthly" | "annual";
 
 interface AppDetailPageProps {
   app?: AppDetailModel;
@@ -20,10 +22,249 @@ function formatInstalls(installs: number): string {
   return `${installs}`;
 }
 
+function OverviewSection({
+  app,
+  resources,
+  selectedHosting
+}: {
+  app: AppDetailModel;
+  resources: string[];
+  selectedHosting: HostingKind;
+}) {
+  return (
+    <section className="mx-auto mt-8 grid max-w-7xl gap-8 px-6 pb-12 lg:grid-cols-3">
+      <div className="space-y-6 lg:col-span-2">
+        <div className="aspect-video rounded-xl border border-gray-200 bg-gray-100 shadow-md">
+          <div className="flex h-full items-center justify-center text-sm font-medium text-gray-500">
+            YouTube Video / Carousel
+          </div>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-3">
+          {app.detailImages.slice(0, 3).map((image) => (
+            <div key={image} className="aspect-video rounded-lg border border-gray-200 bg-gray-50 text-center text-xs text-gray-500">
+              <div className="flex h-full items-center justify-center px-3">{image}</div>
+            </div>
+          ))}
+        </div>
+
+        <article className="rounded-xl border border-gray-200 bg-white p-6">
+          <h2 className="text-2xl font-bold text-gray-900">Overview</h2>
+          <p className="mt-3 text-sm leading-7 text-gray-600">{app.summary}</p>
+          <h3 className="mt-6 text-lg font-semibold text-gray-900">Key capabilities</h3>
+          <ul className="mt-3 space-y-2 text-sm text-gray-700">
+            <li className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-blue-600" />
+              Bi-directional synchronization for workflow entities
+            </li>
+            <li className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-blue-600" />
+              Flexible field mapping and conflict handling
+            </li>
+            <li className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-blue-600" />
+              Audit-ready event logs for enterprise governance
+            </li>
+          </ul>
+          <div className="prose prose-slate mt-5 max-w-none text-sm" dangerouslySetInnerHTML={{ __html: app.longDescription }} />
+        </article>
+      </div>
+
+      <aside className="space-y-4">
+        <div className="rounded-xl border border-gray-200 bg-white p-5">
+          <h3 className="text-sm font-semibold text-gray-900">Resources</h3>
+          <div className="mt-3 space-y-2 text-sm">
+            {resources.map((item) => (
+              <a key={item} href="#" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
+                {item}
+                <ExternalLink className="h-3.5 w-3.5" />
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-gray-200 bg-white p-5">
+          <h3 className="text-sm font-semibold text-gray-900">App Details</h3>
+          <dl className="mt-3 space-y-2 text-sm text-gray-600">
+            <div className="flex justify-between gap-3">
+              <dt>Version</dt>
+              <dd className="text-right text-gray-900">
+                {selectedHosting === "cloud" ? "Latest (Auto-update)" : app.compatibility?.onPremLabel ?? "v4.0+"}
+              </dd>
+            </div>
+            <div className="flex justify-between gap-3">
+              <dt>Last Updated</dt>
+              <dd className="text-right text-gray-900">2 days ago</dd>
+            </div>
+            <div className="flex justify-between gap-3">
+              <dt>License</dt>
+              <dd className="text-right text-gray-900">Commercial</dd>
+            </div>
+          </dl>
+        </div>
+      </aside>
+    </section>
+  );
+}
+
+function PricingSection({ teamSize, setTeamSize }: { teamSize: number; setTeamSize: (value: number) => void }) {
+  const [billingCycle, setBillingCycle] = useState<BillingCycle>("monthly");
+  const standardPerUser = billingCycle === "monthly" ? 10 : 8;
+  const advancedPerUser = billingCycle === "monthly" ? 12 : 9.6;
+
+  return (
+    <section className="mx-auto mt-8 max-w-7xl px-6 pb-12">
+      <div className="rounded-xl border border-gray-200 bg-white p-6">
+        <h2 className="text-2xl font-bold text-gray-900">Simple, transparent pricing</h2>
+        <div className="mt-5 flex flex-wrap items-end gap-6">
+          <label className="text-sm font-medium text-gray-700">
+            Team size
+            <input
+              type="number"
+              min={1}
+              value={teamSize}
+              onChange={(event) => setTeamSize(Math.max(1, Number(event.target.value || "1")))}
+              className="mt-2 block w-40 rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none focus:border-blue-500"
+            />
+          </label>
+          <div>
+            <p className="text-sm font-medium text-gray-700">Billing</p>
+            <div className="mt-2 inline-flex rounded-md border border-gray-200 bg-white p-1">
+              <button
+                type="button"
+                onClick={() => setBillingCycle("monthly")}
+                className={`rounded px-3 py-1.5 text-sm ${
+                  billingCycle === "monthly" ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-50"
+                }`}
+              >
+                Monthly
+              </button>
+              <button
+                type="button"
+                onClick={() => setBillingCycle("annual")}
+                className={`rounded px-3 py-1.5 text-sm ${
+                  billingCycle === "annual" ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-50"
+                }`}
+              >
+                Annual
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 grid gap-4 md:grid-cols-2">
+          <div className="rounded-xl border border-gray-200 p-5">
+            <p className="text-sm font-semibold text-gray-900">Standard</p>
+            <p className="mt-3 text-3xl font-bold text-gray-900">${standardPerUser}</p>
+            <p className="text-xs text-gray-500">per user / {billingCycle === "monthly" ? "month" : "month (annual billing)"}</p>
+            <p className="mt-2 text-sm text-gray-600">Estimated total: ${(teamSize * standardPerUser).toFixed(0)}</p>
+            <ul className="mt-4 space-y-2 text-sm text-gray-600">
+              <li>Core sync workflows</li>
+              <li>Basic field mapping</li>
+              <li>Email support</li>
+            </ul>
+          </div>
+          <div className="rounded-xl border-2 border-blue-500 p-5">
+            <p className="inline-flex rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">
+              Trusted by growing teams
+            </p>
+            <p className="mt-2 text-sm font-semibold text-gray-900">Advanced</p>
+            <p className="mt-3 text-3xl font-bold text-gray-900">${advancedPerUser}</p>
+            <p className="text-xs text-gray-500">per user / {billingCycle === "monthly" ? "month" : "month (annual billing)"}</p>
+            <p className="mt-2 text-sm text-gray-600">Estimated total: ${(teamSize * advancedPerUser).toFixed(0)}</p>
+            <ul className="mt-4 space-y-2 text-sm text-gray-600">
+              <li>Advanced conflict resolution</li>
+              <li>Enterprise audit controls</li>
+              <li>Priority partner support</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ReviewsSection() {
+  const reviewCounts = [62, 21, 8, 3, 1];
+  const reviews = [
+    { user: "Angela W", role: "Engineering Manager", text: "Stable integration with clear logs. Onboarding was smooth." },
+    { user: "Leo Z", role: "Delivery Lead", text: "Field mapping and retry behavior are excellent for large projects." },
+    { user: "Mia C", role: "QA Lead", text: "Good observability and reliable sync for our release process." }
+  ];
+
+  return (
+    <section className="mx-auto mt-8 max-w-7xl px-6 pb-12">
+      <div className="rounded-xl border border-gray-200 bg-white p-6">
+        <div className="grid gap-8 md:grid-cols-2">
+          <div>
+            <p className="text-sm font-medium text-gray-500">Average rating</p>
+            <p className="mt-2 text-5xl font-bold text-gray-900">4.7</p>
+            <p className="mt-2 text-sm text-gray-500">Based on 95 reviews</p>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-700">Rating Distribution</p>
+            <div className="mt-3 space-y-2">
+              {[5, 4, 3, 2, 1].map((rating, index) => (
+                <div key={rating} className="flex items-center gap-3 text-xs text-gray-600">
+                  <span className="w-5">{rating}</span>
+                  <div className="h-2 flex-1 rounded bg-gray-100">
+                    <div
+                      className="h-2 rounded bg-blue-500"
+                      style={{ width: `${Math.min(100, (reviewCounts[index] / reviewCounts[0]) * 100)}%` }}
+                    />
+                  </div>
+                  <span className="w-8 text-right">{reviewCounts[index]}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 space-y-4">
+          {reviews.map((review) => (
+            <article key={review.user} className="rounded-lg border border-gray-100 p-4">
+              <div className="flex items-start gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-50 text-sm font-semibold text-blue-700">
+                  {review.user
+                    .split(" ")
+                    .map((part) => part[0])
+                    .join("")
+                    .slice(0, 2)}
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">{review.user}</p>
+                  <p className="text-xs text-gray-500">{review.role}</p>
+                  <p className="mt-2 text-sm leading-6 text-gray-600">{review.text}</p>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SupportSection() {
+  return (
+    <section className="mx-auto mt-8 max-w-7xl px-6 pb-12">
+      <div className="rounded-xl border border-gray-200 bg-white p-6 text-sm text-gray-700">
+        <p>SLA: 24h first response</p>
+        <p className="mt-2">Email: support@partner.com</p>
+        <a href="#" className="mt-2 inline-flex items-center gap-1 font-medium text-blue-600 hover:underline">
+          Partner support portal
+          <ExternalLink className="h-3.5 w-3.5" />
+        </a>
+      </div>
+    </section>
+  );
+}
+
 export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
   const [selectedHosting, setSelectedHosting] = useState<HostingKind>("cloud");
   const [activeTab, setActiveTab] = useState<TabKey>("Overview");
   const [modalOpen, setModalOpen] = useState(false);
+  const [teamSize, setTeamSize] = useState(10);
 
   if (!app) {
     return (
@@ -97,20 +338,18 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
             </div>
           </div>
 
-          <div className="flex flex-col items-end gap-3">
-            <label className="text-sm font-medium text-gray-700">
-              View for:
-              <select
+          <div className="flex min-w-[240px] flex-col items-end gap-3">
+            <div className="w-full max-w-[240px]">
+              <p className="mb-1 text-sm font-medium text-gray-700">View for:</p>
+              <CustomSelect
                 value={selectedHosting}
-                onChange={(event) => setSelectedHosting(event.target.value as HostingKind)}
-                className="ml-2 rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 outline-none focus:border-blue-500"
-              >
-                <option value="cloud">Cloud</option>
-                <option value="on-prem" disabled={!supportsOnPrem}>
-                  On-Premise
-                </option>
-              </select>
-            </label>
+                onChange={(value) => setSelectedHosting(value as HostingKind)}
+                options={[
+                  { value: "cloud", label: "Cloud" },
+                  { value: "on-prem", label: "On-Premise", disabled: !supportsOnPrem }
+                ]}
+              />
+            </div>
             <button
               type="button"
               onClick={() => {
@@ -178,127 +417,14 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
         </div>
       </section>
 
-      <section className="mx-auto mt-8 grid max-w-7xl gap-8 px-6 pb-12 lg:grid-cols-3">
-        <div className="space-y-6 lg:col-span-2">
-          <div className="aspect-video rounded-xl border border-gray-200 bg-gray-100 shadow-md">
-            <div className="flex h-full items-center justify-center text-sm font-medium text-gray-500">
-              YouTube Video / Carousel
-            </div>
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-3">
-            {app.detailImages.slice(0, 3).map((image) => (
-              <div key={image} className="aspect-video rounded-lg border border-gray-200 bg-gray-50 text-center text-xs text-gray-500">
-                <div className="flex h-full items-center justify-center px-3">{image}</div>
-              </div>
-            ))}
-          </div>
-
-          {activeTab === "Overview" ? (
-            <article className="rounded-xl border border-gray-200 bg-white p-6">
-              <h2 className="text-2xl font-bold text-gray-900">Overview</h2>
-              <p className="mt-3 text-sm leading-7 text-gray-600">{app.summary}</p>
-              <h3 className="mt-6 text-lg font-semibold text-gray-900">Key capabilities</h3>
-              <ul className="mt-3 space-y-2 text-sm text-gray-700">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-blue-600" />
-                  Bi-directional synchronization for workflow entities
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-blue-600" />
-                  Flexible field mapping and conflict handling
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-blue-600" />
-                  Audit-ready event logs for enterprise governance
-                </li>
-              </ul>
-              <div className="prose prose-slate mt-5 max-w-none text-sm" dangerouslySetInnerHTML={{ __html: app.longDescription }} />
-            </article>
-          ) : null}
-
-          {activeTab === "Reviews" ? (
-            <div className="rounded-xl border border-gray-200 bg-white p-6 text-sm text-gray-700">
-              <p className="font-semibold text-gray-900">Customer Reviews</p>
-              <p className="mt-2">Reliable setup and predictable sync behavior across complex enterprise projects.</p>
-            </div>
-          ) : null}
-
-          {activeTab === "Pricing" ? (
-            <div className="rounded-xl border border-gray-200 bg-white p-6">
-              <p className="mb-3 text-sm font-semibold text-gray-900">Pricing</p>
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse text-sm">
-                  <thead>
-                    <tr className="bg-gray-50 text-gray-700">
-                      <th className="border border-gray-200 px-4 py-2 text-left">Plan</th>
-                      <th className="border border-gray-200 px-4 py-2 text-left">Price</th>
-                      <th className="border border-gray-200 px-4 py-2 text-left">Highlights</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="border border-gray-200 px-4 py-2">Free</td>
-                      <td className="border border-gray-200 px-4 py-2">$0</td>
-                      <td className="border border-gray-200 px-4 py-2">Single project sync</td>
-                    </tr>
-                    <tr>
-                      <td className="border border-gray-200 px-4 py-2">Enterprise</td>
-                      <td className="border border-gray-200 px-4 py-2">Contact sales</td>
-                      <td className="border border-gray-200 px-4 py-2">Unlimited projects and audit controls</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          ) : null}
-
-          {activeTab === "Support" ? (
-            <div className="rounded-xl border border-gray-200 bg-white p-6 text-sm text-gray-700">
-              <p>SLA: 24h first response</p>
-              <p className="mt-2">Email: support@partner.com</p>
-              <a href="#" className="mt-2 inline-flex items-center gap-1 font-medium text-blue-600 hover:underline">
-                Partner support portal
-                <ExternalLink className="h-3.5 w-3.5" />
-              </a>
-            </div>
-          ) : null}
-        </div>
-
-        <aside className="space-y-4">
-          <div className="rounded-xl border border-gray-200 bg-white p-5">
-            <h3 className="text-sm font-semibold text-gray-900">Resources</h3>
-            <div className="mt-3 space-y-2 text-sm">
-              {resources.map((item) => (
-                <a key={item} href="#" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
-                  {item}
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </a>
-              ))}
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-gray-200 bg-white p-5">
-            <h3 className="text-sm font-semibold text-gray-900">App Details</h3>
-            <dl className="mt-3 space-y-2 text-sm text-gray-600">
-              <div className="flex justify-between gap-3">
-                <dt>Version</dt>
-                <dd className="text-right text-gray-900">
-                  {selectedHosting === "cloud" ? "Latest (Auto-update)" : app.compatibility?.onPremLabel ?? "v4.0+"}
-                </dd>
-              </div>
-              <div className="flex justify-between gap-3">
-                <dt>Last Updated</dt>
-                <dd className="text-right text-gray-900">2 days ago</dd>
-              </div>
-              <div className="flex justify-between gap-3">
-                <dt>License</dt>
-                <dd className="text-right text-gray-900">Commercial</dd>
-              </div>
-            </dl>
-          </div>
-        </aside>
-      </section>
+      {activeTab === "Overview" ? (
+        <OverviewSection app={app} resources={resources} selectedHosting={selectedHosting} />
+      ) : null}
+      {activeTab === "Pricing" ? (
+        <PricingSection teamSize={teamSize} setTeamSize={setTeamSize} />
+      ) : null}
+      {activeTab === "Reviews" ? <ReviewsSection /> : null}
+      {activeTab === "Support" ? <SupportSection /> : null}
 
       <InstallModal
         isOpen={modalOpen}
