@@ -16,6 +16,7 @@ export interface AppCardModel {
   programs: AppProgram[];
   category?: string;
   supportedHosting?: HostingKind[];
+  spotlight?: string;
 }
 
 export interface SecurityInfo {
