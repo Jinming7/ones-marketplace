@@ -3,6 +3,8 @@ import { FileText, ListTodo, PenTool, ShieldCheck, Terminal } from "lucide-react
 interface AppIconProps {
   name: string;
   category?: string;
+  sizeClassName?: string;
+  iconClassName?: string;
 }
 
 type IconConfig = {
@@ -46,7 +48,12 @@ const FALLBACKS: IconConfig[] = [
   { gradient: "from-orange-400 to-yellow-500", Icon: FileText }
 ];
 
-export function AppIcon({ name, category }: AppIconProps) {
+export function AppIcon({
+  name,
+  category,
+  sizeClassName = "h-12 w-12",
+  iconClassName = "h-5 w-5"
+}: AppIconProps) {
   const key = (category ?? "").toLowerCase();
   const direct = CATEGORY_MAP[key];
   const config = direct ?? FALLBACKS[hashSeed(`${name}:${category ?? ""}`) % FALLBACKS.length];
@@ -54,10 +61,10 @@ export function AppIcon({ name, category }: AppIconProps) {
 
   return (
     <div
-      className={`flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br ${config.gradient} shadow-sm`}
+      className={`flex items-center justify-center rounded-lg bg-gradient-to-br ${config.gradient} shadow-sm ${sizeClassName}`}
       aria-hidden="true"
     >
-      <Icon className="h-5 w-5 text-white" />
+      <Icon className={`text-white ${iconClassName}`} />
     </div>
   );
 }

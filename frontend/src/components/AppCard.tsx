@@ -99,9 +99,11 @@ export function AppCard({ app, disabled = false, disabledLabel, currentVersion, 
           : "hover:border-blue-200 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
       }`}
     >
-      <span className="pointer-events-none absolute right-4 top-4 translate-y-[-4px] rounded-full bg-blue-600 px-3 py-1.5 text-xs font-bold text-white opacity-0 shadow-lg transition-all group-hover:opacity-100">
-        Install
-      </span>
+      {!disabled ? (
+        <span className="pointer-events-none absolute bottom-4 right-4 rounded-md border border-blue-600 bg-white px-3 py-1.5 text-xs font-semibold text-blue-600 opacity-0 transition-all duration-200 group-hover:opacity-100 group-hover:bg-blue-50">
+          View Details
+        </span>
+      ) : null}
 
       <div>
         <div className="mb-4 flex items-start justify-between">
