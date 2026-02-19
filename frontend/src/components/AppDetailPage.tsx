@@ -82,6 +82,51 @@ function MarkdownDescription({ blocks }: { blocks: string[] }) {
   );
 }
 
+function SpotlightIllustration({ index }: { index: number }) {
+  const tones = [
+    "from-blue-100/90 via-indigo-50 to-white",
+    "from-cyan-100/80 via-blue-50 to-white",
+    "from-emerald-100/70 via-teal-50 to-white"
+  ];
+
+  return (
+    <div className={`relative h-52 overflow-hidden rounded-2xl border border-gray-100 bg-gradient-to-br ${tones[index % tones.length]}`}>
+      <div className="absolute left-6 top-6 h-24 w-24 rounded-full border border-white/70 bg-white/60" />
+      <div className="absolute right-10 top-10 h-16 w-16 rounded-xl border border-white/70 bg-white/60 rotate-12" />
+      <div className="absolute bottom-8 left-16 h-2 w-44 rounded bg-blue-200/70" />
+      <div className="absolute bottom-12 left-20 h-2 w-28 rounded bg-indigo-200/70" />
+      <div className="absolute right-16 bottom-10 h-10 w-10 rounded-full border border-blue-200 bg-white/70" />
+    </div>
+  );
+}
+
+function FeatureSpotlightRows({
+  features
+}: {
+  features: { title: string; description: string }[];
+}) {
+  return (
+    <div className="space-y-6">
+      {features.map((feature, index) => (
+        <article
+          key={feature.title}
+          className={`grid gap-5 rounded-2xl border border-gray-100 bg-white p-5 md:grid-cols-2 ${
+            index % 2 === 1 ? "md:[&>div:first-child]:order-2 md:[&>div:last-child]:order-1" : ""
+          }`}
+        >
+          <div>
+            <SpotlightIllustration index={index} />
+          </div>
+          <div className="flex flex-col justify-center">
+            <h3 className="tracking-tight text-2xl font-bold text-gray-900">{feature.title}</h3>
+            <p className="mt-3 text-sm leading-relaxed text-gray-600">{feature.description}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
 function RatingSummary() {
   const bars = [68, 21, 7, 3, 1];
   return (
@@ -392,7 +437,10 @@ function SidebarWidgets({ selectedHosting, app }: { selectedHosting: HostingKind
               <AppIcon name={item.name} sizeClassName="h-8 w-8 rounded-md" iconClassName="h-4 w-4" />
               <div className="min-w-0">
                 <p className="truncate text-sm font-semibold text-gray-900">{item.name}</p>
-                <p className="text-xs text-gray-500">Rating {item.rating}</p>
+                <p className="inline-flex items-center gap-1 text-xs text-gray-500">
+                  <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                  {item.rating}
+                </p>
               </div>
             </Link>
           ))}
@@ -420,6 +468,17 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
   const estimatedText = `$${(isAnnual ? yearlyEstimate : monthlyEstimate).toLocaleString()}/${isAnnual ? "yr" : "mo"}`;
 
   const descriptionBlocks = useMemo(() => markdownToBlocks(app?.longDescription ?? ""), [app?.longDescription]);
+  const featureRows = useMemo(
+    () =>
+      app?.featureSpotlights && app.featureSpotlights.length
+        ? app.featureSpotlights.map((item) => ({ title: item.title, description: item.description }))
+        : [
+            { title: "Automate everything.", description: "Build advanced automations with policy-aware workflow actions." },
+            { title: "Seamless Integration.", description: "Connect delivery systems with low-latency, bi-directional synchronization." },
+            { title: "Enterprise Security.", description: "Control access and auditing with hardened enterprise-grade safeguards." }
+          ],
+    [app?.featureSpotlights]
+  );
 
   if (!app) {
     return (
@@ -442,6 +501,7 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
           <h2 className="tracking-tight text-xl font-bold text-gray-900">Overview</h2>
           <FeatureHighlights />
           <MediaGallery images={app.detailImages} />
+          <FeatureSpotlightRows features={featureRows} />
           <MarkdownDescription blocks={descriptionBlocks} />
         </section>
       );
