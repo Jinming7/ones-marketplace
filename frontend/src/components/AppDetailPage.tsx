@@ -624,29 +624,25 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
         </div>
       </section>
 
-      <section className="sticky top-0 z-40 w-full border-b border-gray-200 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center gap-8 px-6">
-          <nav className="flex justify-start gap-8 overflow-x-auto">
-            {TABS.map((id) => (
-              <button
-                key={id}
-                type="button"
-                onClick={() => setActiveTab(id)}
-                className={`relative cursor-pointer py-4 text-sm transition-colors capitalize ${
-                  activeTab === id ? "font-bold text-blue-600" : "font-medium text-gray-500 hover:text-gray-900"
-                }`}
-              >
-                {id}
-                {activeTab === id ? (
-                  <span className="absolute bottom-0 left-0 h-0.5 w-full rounded-t-full bg-blue-600" />
-                ) : null}
-              </button>
-            ))}
-          </nav>
-        </div>
+      <section className="mx-auto mb-8 mt-8 max-w-7xl px-6">
+        <nav className="flex items-center gap-8 border-b border-gray-200">
+          {TABS.map((id) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setActiveTab(id)}
+              className={`relative cursor-pointer pb-3 text-sm font-medium capitalize ${
+                activeTab === id ? "font-bold text-blue-700" : "text-gray-500 hover:text-gray-900"
+              }`}
+            >
+              {id}
+              {activeTab === id ? <span className="absolute bottom-0 left-0 w-full border-b-[3px] border-blue-600" /> : null}
+            </button>
+          ))}
+        </nav>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-8 px-6 py-8 xl:grid-cols-3">
+      <section className="mx-auto grid max-w-7xl gap-8 px-6 pb-8 xl:grid-cols-3">
         <div className="xl:col-span-2">
           <div key={activeTab} className="animate-in fade-in slide-in-from-bottom-2 duration-300">
             {renderTabPanel()}
