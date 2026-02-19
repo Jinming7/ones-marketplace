@@ -5,10 +5,9 @@ interface AppGridProps {
   apps: AppCardModel[];
   currentVersion: string;
   onPremOnlyMode: boolean;
-  onSelectApp: (appId: string) => void;
 }
 
-export function AppGrid({ apps, currentVersion, onPremOnlyMode, onSelectApp }: AppGridProps) {
+export function AppGrid({ apps, currentVersion, onPremOnlyMode }: AppGridProps) {
   return (
     <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
       {apps.map((app) => {
@@ -20,7 +19,6 @@ export function AppGrid({ apps, currentVersion, onPremOnlyMode, onSelectApp }: A
             currentVersion={currentVersion}
             disabled={disabled}
             disabledLabel={disabled ? "Not available for On-Premise" : undefined}
-            onSelect={onSelectApp}
           />
         );
       })}

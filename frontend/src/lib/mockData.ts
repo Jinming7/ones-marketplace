@@ -1,7 +1,51 @@
-import { AppCardModel } from "./types";
+import { AppCardModel, AppFeatureSpotlight, HostingKind } from "./types";
+
+type AppSeed = {
+  id: string;
+  key: string;
+  name: string;
+  partnerName: string;
+  rating: number;
+  installs: number;
+  summary: string;
+  category: string;
+  supportedHosting: HostingKind[];
+  onPremLabel?: string;
+  cloudFortified?: boolean;
+  spotlight?: string;
+  featureSpotlights?: AppFeatureSpotlight[];
+};
+
+const description = (name: string, summary: string) =>
+  `<h3>${name}</h3><p>${summary}</p><p>Designed for enterprise delivery teams with governance, auditability, and scale in mind.</p>`;
+
+function app(seed: AppSeed): AppCardModel {
+  return {
+    id: seed.id,
+    key: seed.key,
+    logoUrl: "",
+    name: seed.name,
+    partnerName: seed.partnerName,
+    rating: seed.rating,
+    installs: seed.installs,
+    summary: seed.summary,
+    programs: seed.cloudFortified ? [{ code: "CLOUD_FORTIFIED", label: "Cloud Fortified" }] : [],
+    category: seed.category,
+    supportedHosting: seed.supportedHosting,
+    spotlight: seed.spotlight,
+    compatibility: {
+      cloudLabel: seed.supportedHosting.includes("cloud") ? "SaaS Ready" : undefined,
+      onPremLabel: seed.onPremLabel,
+      testedOn: seed.onPremLabel ? `Tested on ${seed.onPremLabel}` : "Tested on ONES SaaS"
+    },
+    featureSpotlights: seed.featureSpotlights,
+    detailImages: ["Dashboard View", "Configuration", "Audit Logs"],
+    longDescription: description(seed.name, seed.summary)
+  };
+}
 
 export const marketplaceApps: AppCardModel[] = [
-  {
+  app({
     id: "scriptrunner",
     key: "scriptrunner-pro",
     name: "ScriptRunner Pro",
@@ -9,17 +53,27 @@ export const marketplaceApps: AppCardModel[] = [
     rating: 4.9,
     installs: 12000,
     summary: "Advanced automation engine for workflow scripting.",
-    programs: [{ code: "CLOUD_FORTIFIED", label: "Cloud Fortified" }],
     category: "DevOps",
     supportedHosting: ["cloud", "on-prem"],
+    onPremLabel: "ONES 6.0+",
+    cloudFortified: true,
     spotlight: "Spotlight",
-    compatibility: { cloudLabel: "SaaS Ready", onPremLabel: "ONES 6.0+", testedOn: "Tested on ONES 6.10.1" },
-    logoUrl: "",
-    detailImages: ["Automation Dashboard", "Script Editor", "Audit Trail"],
-    longDescription:
-      "<h3>Automate with confidence</h3><p>ScriptRunner Pro helps enterprise teams enforce standards and reduce manual work through scripted automations.</p><p>It supports policy-aware execution, rollback, and traceable operation history.</p>"
-  },
-  {
+    featureSpotlights: [
+      {
+        title: "Groovy Scripting",
+        description: "Build advanced automation rules with Groovy for enterprise workflows."
+      },
+      {
+        title: "JQL Functions",
+        description: "Extend query capabilities with custom JQL-style functions and operators."
+      },
+      {
+        title: "Workflow Post-functions",
+        description: "Attach secure post-functions to transitions for consistent operational control."
+      }
+    ]
+  }),
+  app({
     id: "tempo",
     key: "tempo-timesheets",
     name: "Tempo Timesheets",
@@ -27,16 +81,24 @@ export const marketplaceApps: AppCardModel[] = [
     rating: 4.7,
     installs: 17000,
     summary: "Track team effort and billing-ready timesheets.",
-    programs: [],
     category: "Time Tracking",
     supportedHosting: ["cloud"],
-    compatibility: { cloudLabel: "SaaS Ready", testedOn: "Tested on ONES SaaS" },
-    logoUrl: "",
-    detailImages: ["Timesheet Calendar", "Worklog Report", "Team Capacity"],
-    longDescription:
-      "<h3>Time visibility at scale</h3><p>Tempo Timesheets gives delivery leads a clear view of effort allocation and forecasting across teams.</p><p>Export-ready reports help finance and operations workflows.</p>"
-  },
-  {
+    featureSpotlights: [
+      {
+        title: "Time Tracking",
+        description: "Capture effort automatically and map worklogs to delivery milestones."
+      },
+      {
+        title: "Resource Planning",
+        description: "Plan capacity and allocation with real-time team workload visibility."
+      },
+      {
+        title: "Cost Reporting",
+        description: "Transform tracked time into cost insights for finance and PMO reporting."
+      }
+    ]
+  }),
+  app({
     id: "gliffy",
     key: "gliffy-diagrams",
     name: "Gliffy Diagrams",
@@ -44,16 +106,25 @@ export const marketplaceApps: AppCardModel[] = [
     rating: 4.4,
     installs: 7000,
     summary: "Create technical diagrams directly in ONES.",
-    programs: [],
     category: "Design",
     supportedHosting: ["on-prem"],
-    compatibility: { onPremLabel: "ONES 5.0 - 5.4", testedOn: "Tested on ONES 5.4.3", warning: true },
-    logoUrl: "",
-    detailImages: ["Diagram Board", "Template Library", "Export Panel"],
-    longDescription:
-      "<h3>Diagram-first collaboration</h3><p>Gliffy Diagrams enables architecture and flowchart creation in context with requirement and delivery artifacts.</p><p>It is best suited for teams on legacy on-prem environments.</p>"
-  },
-  {
+    onPremLabel: "ONES 5.0 - 5.4",
+    featureSpotlights: [
+      {
+        title: "Technical Diagramming",
+        description: "Build architecture and process diagrams directly in project contexts."
+      },
+      {
+        title: "Template Library",
+        description: "Accelerate documentation quality with reusable enterprise diagram templates."
+      },
+      {
+        title: "Legacy Compatibility",
+        description: "Support older ONES server environments with stable rendering and exports."
+      }
+    ]
+  }),
+  app({
     id: "zephyr",
     key: "zephyr-scale",
     name: "Zephyr Scale",
@@ -61,16 +132,11 @@ export const marketplaceApps: AppCardModel[] = [
     rating: 4.6,
     installs: 9000,
     summary: "Manage test plans, executions, and traceability.",
-    programs: [],
     category: "Test Management",
     supportedHosting: ["cloud", "on-prem"],
-    compatibility: { cloudLabel: "SaaS Ready", onPremLabel: "ONES 6.0+", testedOn: "Tested on ONES 6.10.1" },
-    logoUrl: "",
-    detailImages: ["Test Plan", "Execution Matrix", "Coverage Report"],
-    longDescription:
-      "<h3>Quality operations in one place</h3><p>Zephyr Scale provides test lifecycle orchestration tightly coupled with development workflows.</p><p>From planning to execution to traceability, teams get a unified quality signal.</p>"
-  },
-  {
+    onPremLabel: "ONES 6.0+"
+  }),
+  app({
     id: "drawio",
     key: "drawio-embed",
     name: "Draw.io Embed",
@@ -78,16 +144,11 @@ export const marketplaceApps: AppCardModel[] = [
     rating: 4.8,
     installs: 21000,
     summary: "Embed architecture diagrams into product docs.",
-    programs: [{ code: "FEATURED", label: "Featured" }],
     category: "Design",
     supportedHosting: ["cloud"],
-    compatibility: { cloudLabel: "SaaS Ready", testedOn: "Tested on ONES SaaS" },
-    logoUrl: "",
-    detailImages: ["Canvas", "Connector Library", "Publish Link"],
-    longDescription:
-      "<h3>Visualize systems faster</h3><p>Embed editable diagrams inside ONES docs to reduce context switching in architecture review cycles.</p><p>Supports team templates and revision tracking.</p>"
-  },
-  {
+    spotlight: "Featured"
+  }),
+  app({
     id: "eazybi",
     key: "eazybi-reports",
     name: "EazyBI Reports",
@@ -95,16 +156,11 @@ export const marketplaceApps: AppCardModel[] = [
     rating: 4.7,
     installs: 13000,
     summary: "Advanced BI dashboards for delivery analytics.",
-    programs: [],
     category: "Reporting",
     supportedHosting: ["on-prem"],
-    compatibility: { onPremLabel: "ONES 6.0+", testedOn: "Tested on ONES 6.10.1" },
-    logoUrl: "",
-    detailImages: ["Executive Dashboard", "Custom Measures", "Trend Explorer"],
-    longDescription:
-      "<h3>Enterprise reporting depth</h3><p>EazyBI offers powerful multidimensional analytics for PMO and leadership reporting.</p><p>Build custom metrics and benchmark delivery trends over time.</p>"
-  },
-  {
+    onPremLabel: "ONES 6.0+"
+  }),
+  app({
     id: "slack",
     key: "slack-connect",
     name: "Slack Connect",
@@ -112,16 +168,10 @@ export const marketplaceApps: AppCardModel[] = [
     rating: 4.8,
     installs: 45000,
     summary: "Real-time incident and release alerts in channels.",
-    programs: [{ code: "POPULAR", label: "Popular" }],
     category: "Communication",
-    supportedHosting: ["cloud"],
-    compatibility: { cloudLabel: "SaaS Ready", testedOn: "Tested on ONES SaaS" },
-    logoUrl: "",
-    detailImages: ["Notification Rules", "Channel Routing", "Event History"],
-    longDescription:
-      "<h3>Faster team alignment</h3><p>Slack Connect routes critical updates from ONES directly to team channels for immediate visibility.</p><p>Alert fatigue is reduced through scoped routing and ownership tags.</p>"
-  },
-  {
+    supportedHosting: ["cloud"]
+  }),
+  app({
     id: "github-sync",
     key: "github-sync",
     name: "GitHub Sync",
@@ -129,16 +179,11 @@ export const marketplaceApps: AppCardModel[] = [
     rating: 4.7,
     installs: 18000,
     summary: "Sync pull requests and deployments to ONES tasks.",
-    programs: [],
     category: "DevOps",
     supportedHosting: ["cloud", "on-prem"],
-    compatibility: { cloudLabel: "SaaS Ready", onPremLabel: "ONES 6.0+", testedOn: "Tested on ONES 6.9.4" },
-    logoUrl: "",
-    detailImages: ["PR Timeline", "Deploy Events", "Branch Policy"],
-    longDescription:
-      "<h3>Code to plan continuity</h3><p>GitHub Sync links engineering execution signals to roadmap context in ONES.</p><p>Teams can trace feature status from planning through merge and deployment.</p>"
-  },
-  {
+    onPremLabel: "ONES 6.0+"
+  }),
+  app({
     id: "jenkins",
     key: "jenkins-pipelines",
     name: "Jenkins Pipelines",
@@ -146,16 +191,11 @@ export const marketplaceApps: AppCardModel[] = [
     rating: 4.4,
     installs: 20000,
     summary: "Trigger builds from ONES release gates.",
-    programs: [],
     category: "DevOps",
     supportedHosting: ["on-prem"],
-    compatibility: { onPremLabel: "ONES 5.4 - 6.2", testedOn: "Tested on ONES 6.2.0" },
-    logoUrl: "",
-    detailImages: ["Pipeline Trigger", "Build Matrix", "Artifact Status"],
-    longDescription:
-      "<h3>Controlled release automation</h3><p>Jenkins Pipelines provides release-gated automation for server-heavy environments.</p><p>Integrates with approval workflows and deployment evidence tracking.</p>"
-  },
-  {
+    onPremLabel: "ONES 5.4 - 6.2"
+  }),
+  app({
     id: "okta",
     key: "okta-sso",
     name: "Okta SSO",
@@ -163,16 +203,12 @@ export const marketplaceApps: AppCardModel[] = [
     rating: 4.8,
     installs: 19000,
     summary: "Enterprise authentication and user lifecycle.",
-    programs: [{ code: "CLOUD_FORTIFIED", label: "Cloud Fortified" }],
     category: "Security",
     supportedHosting: ["cloud", "on-prem"],
-    compatibility: { cloudLabel: "SaaS Ready", onPremLabel: "ONES 6.0+", testedOn: "Tested on ONES 6.10.1" },
-    logoUrl: "",
-    detailImages: ["SSO Config", "Lifecycle Rules", "Audit Logs"],
-    longDescription:
-      "<h3>Identity governance</h3><p>Okta SSO centralizes access and lifecycle policies for enterprise compliance posture.</p><p>Supports role-based mapping and secure authentication standards.</p>"
-  },
-  {
+    onPremLabel: "ONES 6.0+",
+    cloudFortified: true
+  }),
+  app({
     id: "notion",
     key: "notion-import",
     name: "Notion Wiki Import",
@@ -180,13 +216,136 @@ export const marketplaceApps: AppCardModel[] = [
     rating: 4.3,
     installs: 5000,
     summary: "Migrate docs and structure to ONES Wiki.",
-    programs: [],
     category: "Office/Doc",
+    supportedHosting: ["cloud"]
+  }),
+  app({
+    id: "miro",
+    key: "miro-whiteboard",
+    name: "Miro Whiteboard",
+    partnerName: "Miro",
+    rating: 4.8,
+    installs: 25000,
+    summary: "Collaborative brainstorming directly in ONES wiki pages.",
+    category: "Collaboration",
+    supportedHosting: ["cloud"]
+  }),
+  app({
+    id: "figma-bridge",
+    key: "figma-bridge",
+    name: "Figma Bridge",
+    partnerName: "Figma",
+    rating: 4.9,
+    installs: 15000,
+    summary: "Embed live design prototypes in requirement documents.",
+    category: "Design",
     supportedHosting: ["cloud"],
-    compatibility: { cloudLabel: "SaaS Ready", testedOn: "Tested on ONES SaaS" },
-    logoUrl: "",
-    detailImages: ["Import Wizard", "Mapping Review", "Migration Log"],
-    longDescription:
-      "<h3>Fast knowledge migration</h3><p>Notion Wiki Import accelerates transition to ONES knowledge base with hierarchy and link preservation.</p><p>Teams can validate migrated structures before final publish.</p>"
-  }
+    spotlight: "Spotlight"
+  }),
+  app({
+    id: "sentry",
+    key: "sentry-monitor",
+    name: "Sentry Monitor",
+    partnerName: "Sentry",
+    rating: 4.6,
+    installs: 3000,
+    summary: "Link runtime crash reports to ONES bug tickets.",
+    category: "DevOps",
+    supportedHosting: ["cloud", "on-prem"],
+    onPremLabel: "ONES 6.2+"
+  }),
+  app({
+    id: "zendesk",
+    key: "zendesk-support",
+    name: "Zendesk Support",
+    partnerName: "Zendesk",
+    rating: 4.5,
+    installs: 10000,
+    summary: "Turn support tickets into prioritized engineering tasks.",
+    category: "Service",
+    supportedHosting: ["cloud"]
+  }),
+  app({
+    id: "harvest",
+    key: "harvest-time",
+    name: "Harvest Time Tracking",
+    partnerName: "Harvest",
+    rating: 4.6,
+    installs: 9000,
+    summary: "Track time across ONES tasks automatically.",
+    category: "Business",
+    supportedHosting: ["cloud", "on-prem"],
+    onPremLabel: "ONES 5.8+"
+  }),
+  app({
+    id: "intercom",
+    key: "intercom-chat",
+    name: "Intercom Chat",
+    partnerName: "Intercom",
+    rating: 4.7,
+    installs: 6000,
+    summary: "View customer conversations in issue context.",
+    category: "Service",
+    supportedHosting: ["cloud"]
+  }),
+  app({
+    id: "copilot",
+    key: "copilot-integration",
+    name: "AI Copilot Integration",
+    partnerName: "ONES AI",
+    rating: 5.0,
+    installs: 2000,
+    summary: "AI-assisted story writing and acceptance criteria.",
+    category: "AI",
+    supportedHosting: ["cloud"],
+    spotlight: "New"
+  }),
+  app({
+    id: "table-filter",
+    key: "table-filter-charts",
+    name: "Table Filter and Charts",
+    partnerName: "StiltSoft",
+    rating: 4.5,
+    installs: 11000,
+    summary: "Build data tables and charts for project reporting.",
+    category: "Reporting",
+    supportedHosting: ["cloud", "on-prem"],
+    onPremLabel: "ONES 6.0+"
+  }),
+  app({
+    id: "xray-tests",
+    key: "xray-test-management",
+    name: "Xray Test Management",
+    partnerName: "Xblend",
+    rating: 4.8,
+    installs: 14000,
+    summary: "Enterprise-grade test planning and execution traceability.",
+    category: "Test Management",
+    supportedHosting: ["cloud", "on-prem"],
+    onPremLabel: "ONES 6.1+",
+    cloudFortified: true
+  }),
+  app({
+    id: "crm-hub",
+    key: "crm-hub",
+    name: "CRM Hub Connector",
+    partnerName: "SalesWave",
+    rating: 4.4,
+    installs: 7800,
+    summary: "Sync deals, accounts, and tasks between CRM and ONES.",
+    category: "CRM",
+    supportedHosting: ["cloud"]
+  }),
+  app({
+    id: "sonarqube",
+    key: "sonarqube-quality",
+    name: "SonarQube Quality Gate",
+    partnerName: "SonarSource",
+    rating: 4.7,
+    installs: 8400,
+    summary: "Expose code quality gates in release management workflows.",
+    category: "DevOps",
+    supportedHosting: ["cloud", "on-prem"],
+    onPremLabel: "ONES 6.4+"
+  })
 ];

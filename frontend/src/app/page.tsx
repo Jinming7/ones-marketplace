@@ -2,13 +2,11 @@
 
 import { useMemo, useState } from "react";
 import { Header } from "@/components/Header";
-import { AppDetailPage } from "@/components/AppDetailPage";
 import { CustomSelect } from "@/components/CustomSelect";
 import { AppGrid } from "@/components/AppGrid";
 import { FilterBar } from "@/components/FilterBar";
 import { SpotlightSection } from "@/components/SpotlightSection";
 import { marketplaceApps } from "@/lib/mockData";
-import { AppDetailModel } from "@/lib/types";
 
 const versions = ["5.4.3", "6.2.0", "6.10.1", "7.0.0"];
 
@@ -17,8 +15,6 @@ export default function HomePage() {
   const [selectedHostings, setSelectedHostings] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [currentVersion, setCurrentVersion] = useState("6.10.1");
-  const [currentView, setCurrentView] = useState<"home" | "detail">("home");
-  const [selectedAppId, setSelectedAppId] = useState<string | null>(null);
 
   const categoryOptions = useMemo(() => {
     const unique = Array.from(new Set(marketplaceApps.map((item) => item.category).filter(Boolean))) as string[];
@@ -50,38 +46,8 @@ export default function HomePage() {
     });
   }, [search, selectedCategories, selectedHostings]);
 
-  const selectedApp = useMemo(
-    () => marketplaceApps.find((item) => item.id === selectedAppId),
-    [selectedAppId]
-  );
-
-  if (currentView === "detail" && selectedApp) {
-    const detailApp: AppDetailModel = selectedApp;
-    return (
-      <AppDetailPage
-        app={detailApp}
-        onBackHome={() => {
-          setCurrentView("home");
-          setSelectedAppId(null);
-        }}
-      />
-    );
-  }
-
-  if (currentView === "detail" && !selectedApp) {
-    return (
-      <AppDetailPage
-        app={undefined}
-        onBackHome={() => {
-          setCurrentView("home");
-          setSelectedAppId(null);
-        }}
-      />
-    );
-  }
-
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="relative z-10 min-h-screen bg-transparent">
       <Header showLogin showPartnerPortal />
 
       <section
@@ -131,10 +97,6 @@ export default function HomePage() {
           apps={filteredApps}
           currentVersion={currentVersion}
           onPremOnlyMode={onPremOnlyMode}
-          onSelectApp={(appId) => {
-            setSelectedAppId(appId);
-            setCurrentView("detail");
-          }}
         />
       </section>
     </main>

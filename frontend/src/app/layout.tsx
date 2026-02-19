@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { StoreProvider } from "@/store/provider";
+import { BackgroundGradient } from "@/components/BackgroundGradient";
 
 export const metadata: Metadata = {
   title: "ONES Marketplace",
@@ -11,7 +12,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="zh-CN">
       <body>
-        <StoreProvider>{children}</StoreProvider>
+        <BackgroundGradient />
+        <div className="relative z-10">
+          <StoreProvider>{children}</StoreProvider>
+        </div>
       </body>
     </html>
   );
