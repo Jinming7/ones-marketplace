@@ -12,6 +12,12 @@ export interface AppCompatibility {
   warning?: boolean;
 }
 
+export interface AppFeatureSpotlight {
+  title: string;
+  description: string;
+  imageUrl?: string;
+}
+
 export interface AppCardModel {
   id: string;
   key: string;
@@ -26,6 +32,7 @@ export interface AppCardModel {
   supportedHosting?: HostingKind[];
   spotlight?: string;
   compatibility?: AppCompatibility;
+  featureSpotlights?: AppFeatureSpotlight[];
   detailImages: string[];
   longDescription: string;
 }

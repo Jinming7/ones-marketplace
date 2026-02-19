@@ -1,4 +1,4 @@
-import { AppCardModel, HostingKind } from "./types";
+import { AppCardModel, AppFeatureSpotlight, HostingKind } from "./types";
 
 type AppSeed = {
   id: string;
@@ -13,6 +13,7 @@ type AppSeed = {
   onPremLabel?: string;
   cloudFortified?: boolean;
   spotlight?: string;
+  featureSpotlights?: AppFeatureSpotlight[];
 };
 
 const description = (name: string, summary: string) =>
@@ -37,6 +38,7 @@ function app(seed: AppSeed): AppCardModel {
       onPremLabel: seed.onPremLabel,
       testedOn: seed.onPremLabel ? `Tested on ${seed.onPremLabel}` : "Tested on ONES SaaS"
     },
+    featureSpotlights: seed.featureSpotlights,
     detailImages: ["Dashboard View", "Configuration", "Audit Logs"],
     longDescription: description(seed.name, seed.summary)
   };
@@ -55,7 +57,21 @@ export const marketplaceApps: AppCardModel[] = [
     supportedHosting: ["cloud", "on-prem"],
     onPremLabel: "ONES 6.0+",
     cloudFortified: true,
-    spotlight: "Spotlight"
+    spotlight: "Spotlight",
+    featureSpotlights: [
+      {
+        title: "Groovy Scripting",
+        description: "Build advanced automation rules with Groovy for enterprise workflows."
+      },
+      {
+        title: "JQL Functions",
+        description: "Extend query capabilities with custom JQL-style functions and operators."
+      },
+      {
+        title: "Workflow Post-functions",
+        description: "Attach secure post-functions to transitions for consistent operational control."
+      }
+    ]
   }),
   app({
     id: "tempo",
@@ -66,7 +82,21 @@ export const marketplaceApps: AppCardModel[] = [
     installs: 17000,
     summary: "Track team effort and billing-ready timesheets.",
     category: "Time Tracking",
-    supportedHosting: ["cloud"]
+    supportedHosting: ["cloud"],
+    featureSpotlights: [
+      {
+        title: "Time Tracking",
+        description: "Capture effort automatically and map worklogs to delivery milestones."
+      },
+      {
+        title: "Resource Planning",
+        description: "Plan capacity and allocation with real-time team workload visibility."
+      },
+      {
+        title: "Cost Reporting",
+        description: "Transform tracked time into cost insights for finance and PMO reporting."
+      }
+    ]
   }),
   app({
     id: "gliffy",
@@ -78,7 +108,21 @@ export const marketplaceApps: AppCardModel[] = [
     summary: "Create technical diagrams directly in ONES.",
     category: "Design",
     supportedHosting: ["on-prem"],
-    onPremLabel: "ONES 5.0 - 5.4"
+    onPremLabel: "ONES 5.0 - 5.4",
+    featureSpotlights: [
+      {
+        title: "Technical Diagramming",
+        description: "Build architecture and process diagrams directly in project contexts."
+      },
+      {
+        title: "Template Library",
+        description: "Accelerate documentation quality with reusable enterprise diagram templates."
+      },
+      {
+        title: "Legacy Compatibility",
+        description: "Support older ONES server environments with stable rendering and exports."
+      }
+    ]
   }),
   app({
     id: "zephyr",
