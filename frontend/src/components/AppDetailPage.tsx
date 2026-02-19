@@ -673,7 +673,7 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
         <div
           className={`transition-all duration-300 ${
             isStickyTabs
-              ? "fixed left-0 top-0 z-50 w-full border-b border-gray-200 bg-white/80 px-6 py-0 shadow-sm backdrop-blur-md"
+              ? "fixed left-0 top-0 z-50 w-full border-b border-gray-200 bg-white/70 px-6 py-0 shadow-sm backdrop-blur-md"
               : "mx-auto mb-8 max-w-7xl border-b border-gray-200 bg-transparent px-6"
           }`}
         >
