@@ -2,6 +2,8 @@
 
 import { Github, ListTodo, MessageSquare, PenTool } from "lucide-react";
 
+const ORBIT_DURATION_SECONDS = 18;
+
 const ORBIT_ITEMS = [
   { label: "Automation", Icon: ListTodo, angle: "top-0 left-1/2 -translate-x-1/2 -translate-y-1/2" },
   { label: "Slack", Icon: MessageSquare, angle: "top-1/2 right-0 translate-x-1/2 -translate-y-1/2" },
@@ -15,10 +17,13 @@ export function OrbitVisual() {
       <div className="absolute inset-10 rounded-full border border-blue-100/80" />
       <div className="absolute inset-16 rounded-full border border-blue-100/70" />
 
-      <div className="absolute inset-0 animate-spin-slow">
+      <div className="absolute inset-0 transform-gpu" style={{ animation: `spinSlow ${ORBIT_DURATION_SECONDS}s linear infinite` }}>
         {ORBIT_ITEMS.map((item) => (
           <div key={item.label} className={`absolute ${item.angle}`}>
-            <div className="orbit-counter-spin flex items-center gap-2 rounded-2xl border border-white/60 bg-white/80 px-3 py-2 shadow-[0_10px_30px_rgba(15,23,42,0.08)] backdrop-blur-sm">
+            <div
+              className="flex transform-gpu items-center gap-2 rounded-2xl border border-white/60 bg-white/80 px-3 py-2 shadow-[0_10px_30px_rgba(15,23,42,0.08)] backdrop-blur-sm"
+              style={{ animation: `spinSlowReverse ${ORBIT_DURATION_SECONDS}s linear infinite` }}
+            >
               <item.Icon className="h-4 w-4 text-blue-600" />
               <span className="text-xs font-semibold text-slate-700">{item.label}</span>
             </div>
