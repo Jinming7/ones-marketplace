@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  ArrowUp,
   BarChart3,
   CheckCircle2,
   ExternalLink,
@@ -450,12 +451,55 @@ function SidebarWidgets({ selectedHosting, app }: { selectedHosting: HostingKind
   );
 }
 
+function ScrollToTopButton({ visible }: { visible: boolean }) {
+  return (
+    <button
+      type="button"
+      aria-label="Back to top"
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      className={`fixed bottom-8 right-8 z-50 rounded-full border border-gray-200 bg-white p-3 text-gray-600 shadow-lg transition-all transform hover:-translate-y-1 hover:text-blue-600 ${
+        visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-2 opacity-0"
+      }`}
+    >
+      <ArrowUp className="h-5 w-5" />
+    </button>
+  );
+}
+
 export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
   const [selectedHosting, setSelectedHosting] = useState<HostingKind>("cloud");
   const [activeTab, setActiveTab] = useState<TabKey>("overview");
   const [isAnnual, setIsAnnual] = useState(false);
   const [teamSize, setTeamSize] = useState(10);
   const [openInstall, setOpenInstall] = useState(false);
+  const [isStickyTabs, setIsStickyTabs] = useState(false);
+  const [showTopButton, setShowTopButton] = useState(false);
+  const tabsSentinelRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const sentinel = tabsSentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsStickyTabs(!entry.isIntersecting);
+      },
+      { threshold: 0 }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setShowTopButton(window.scrollY > 400);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const supportsOnPrem = app?.supportedHosting?.includes("on-prem") ?? false;
   const primaryCta = selectedHosting === "cloud" ? "Try it free" : supportsOnPrem ? "Free 30-day trial" : "Buy license";
@@ -482,7 +526,7 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
 
   if (!app) {
     return (
-      <main className="min-h-screen bg-gray-50">
+      <main className="relative z-10 min-h-screen bg-transparent">
         <Header showLogin showPartnerPortal />
         <section className="mx-auto max-w-7xl px-6 py-16 text-center">
           <h1 className="text-3xl font-bold text-gray-900">App not found</h1>
@@ -561,10 +605,10 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="relative z-10 min-h-screen bg-transparent">
       <Header showLogin showPartnerPortal />
 
-      <section className="mx-auto max-w-7xl border-b border-blue-100/50 bg-gradient-to-br from-blue-50/80 via-white to-white px-6 py-8">
+      <section className="mx-auto max-w-7xl bg-transparent px-6 py-8">
         <div className="mb-5 flex items-center gap-2 text-sm text-gray-500">
           {onBackHome ? (
             <button type="button" onClick={onBackHome} className="hover:text-blue-600 hover:underline">Marketplace</button>
@@ -624,22 +668,32 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
         </div>
       </section>
 
-      <section className="mx-auto mb-8 mt-8 max-w-7xl px-6">
-        <nav className="flex items-center gap-8 border-b border-gray-200">
-          {TABS.map((id) => (
-            <button
-              key={id}
-              type="button"
-              onClick={() => setActiveTab(id)}
-              className={`relative cursor-pointer pb-3 text-sm font-medium capitalize ${
-                activeTab === id ? "font-bold text-blue-700" : "text-gray-500 hover:text-gray-900"
-              }`}
-            >
-              {id}
-              {activeTab === id ? <span className="absolute bottom-0 left-0 w-full border-b-[3px] border-blue-600" /> : null}
-            </button>
-          ))}
-        </nav>
+      <section className="mt-8">
+        <div ref={tabsSentinelRef} className="h-px w-full" />
+        <div
+          className={`transition-all duration-300 ${
+            isStickyTabs
+              ? "fixed left-0 top-0 z-50 w-full border-b border-gray-200 bg-white/80 px-6 py-0 shadow-sm backdrop-blur-md"
+              : "mx-auto mb-8 max-w-7xl border-b border-gray-200 bg-transparent px-6"
+          }`}
+        >
+          <nav className={`flex items-center gap-8 ${isStickyTabs ? "mx-auto max-w-7xl" : ""}`}>
+            {TABS.map((id) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setActiveTab(id)}
+                className={`relative cursor-pointer pb-3 pt-3 text-sm font-medium capitalize transition-colors ${
+                  activeTab === id ? "font-bold text-blue-700" : "text-gray-500 hover:text-gray-900"
+                }`}
+              >
+                {id}
+                {activeTab === id ? <span className="absolute bottom-0 left-0 w-full border-b-[3px] border-blue-600" /> : null}
+              </button>
+            ))}
+          </nav>
+        </div>
+        {isStickyTabs ? <div className="mx-auto mb-8 h-[49px] max-w-7xl px-6" /> : null}
       </section>
 
       <section className="mx-auto grid max-w-7xl gap-8 px-6 pb-8 xl:grid-cols-3">
@@ -653,6 +707,7 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
       </section>
 
       <InstallModal isOpen={openInstall} appName={app.name} onClose={() => setOpenInstall(false)} onSuccess={() => setOpenInstall(false)} />
+      <ScrollToTopButton visible={showTopButton} />
     </main>
   );
 }

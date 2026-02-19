@@ -47,7 +47,7 @@ export default function HomePage() {
   }, [search, selectedCategories, selectedHostings]);
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="relative z-10 min-h-screen bg-transparent">
       <Header showLogin showPartnerPortal />
 
       <section
