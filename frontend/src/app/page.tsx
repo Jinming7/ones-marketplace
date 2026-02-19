@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Search, ShieldCheck, Sparkles, WandSparkles } from "lucide-react";
-import { useMemo, useState } from "react";
+import { ChevronLeft, ChevronRight, Search, ShieldCheck, Sparkles, WandSparkles } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
 import { Header } from "@/components/Header";
 import { AppCard } from "@/components/AppCard";
 import { CategoryPills } from "@/components/CategoryPills";
@@ -23,16 +23,24 @@ const CATEGORY_ITEMS = [
   "Security"
 ];
 
-const TRUST_LOGOS = ["XIAOMI", "DJI", "BILIBILI", "MEITUAN", "BYTEDANCE", "SHEIN"];
+const TRUST_LOGOS = [
+  { name: "Xiaomi", style: <span className="text-2xl font-bold text-orange-500">mi</span> },
+  { name: "Shopee", style: <span className="text-xl font-bold text-orange-500">S</span> },
+  { name: "KPMG", style: <span className="text-xl font-extrabold tracking-wider text-blue-600">KPMG</span> },
+  { name: "Panasonic", style: <span className="text-lg font-extrabold text-blue-700">Panasonic</span> },
+  { name: "Honor", style: <span className="text-lg font-bold tracking-[0.25em] text-slate-700">HONOR</span> },
+  { name: "Watsons", style: <span className="text-lg font-semibold text-cyan-600">watsons</span> }
+];
 
 export default function HomePage() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [currentVersion, setCurrentVersion] = useState("6.10.1");
+  const trendingRef = useRef<HTMLDivElement | null>(null);
 
   const filteredApps = useMemo(() => {
     return marketplaceApps.filter((app) => {
-      const keyword = `${app.name} ${app.partnerName} ${app.summary} ${app.category ?? ""}`.toLowerCase();
+      const keyword = `${app.name} ${app.partnerName} ${app.summary} ${app.shortDescription} ${app.tags.join(" ")} ${app.category ?? ""}`.toLowerCase();
       const bySearch = search.trim().length === 0 || keyword.includes(search.toLowerCase());
       const byCategory = category === "All" || app.category === category;
       return bySearch && byCategory;
@@ -41,8 +49,14 @@ export default function HomePage() {
 
   const trendingApps = filteredApps.slice(0, 10);
 
+  const scrollTrending = (direction: "left" | "right") => {
+    if (!trendingRef.current) return;
+    const delta = direction === "left" ? -420 : 420;
+    trendingRef.current.scrollBy({ left: delta, behavior: "smooth" });
+  };
+
   return (
-    <main className="relative z-10 min-h-screen bg-transparent">
+    <main className="relative z-10 min-h-screen bg-transparent bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:24px_24px]">
       <Header showLogin showPartnerPortal />
 
       <section className="relative overflow-hidden border-b border-gray-100 bg-slate-50/70">
@@ -122,8 +136,22 @@ export default function HomePage() {
             <h2 className="text-2xl font-bold tracking-tight text-slate-900">Trending this week</h2>
             <p className="mt-1 text-sm text-gray-500">What enterprise teams are installing right now</p>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => scrollTrending("left")}
+              className="rounded-full border border-gray-200 bg-white p-2 text-gray-600 transition hover:border-blue-400 hover:text-blue-600"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollTrending("right")}
+              className="rounded-full border border-gray-200 bg-white p-2 text-gray-600 transition hover:border-blue-400 hover:text-blue-600"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+            <div className="ml-2 flex items-center gap-2">
               <span className="text-sm text-gray-500">Current ONES version</span>
               <CustomSelect
                 value={currentVersion}
@@ -133,17 +161,32 @@ export default function HomePage() {
                 triggerClassName="rounded-full"
               />
             </div>
-            <Link href="#" className="text-sm font-semibold text-blue-600 hover:underline">
+            <Link href="#" className="ml-2 text-sm font-semibold text-blue-600 hover:underline">
               View all →
             </Link>
           </div>
         </div>
 
-        <div className="scrollbar-hide -mx-2 flex gap-5 overflow-x-auto px-2 pb-2">
+        <div
+          ref={trendingRef}
+          className="scrollbar-hide -mx-2 flex snap-x snap-mandatory gap-6 overflow-x-auto overflow-y-hidden px-2 pb-2 touch-pan-x"
+        >
           {trendingApps.map((app) => (
-            <div key={app.id} className="w-[360px] min-w-[360px]">
+            <div key={app.id} className="w-[360px] min-w-[360px] snap-start">
               <AppCard app={app} currentVersion={currentVersion} />
             </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 pb-16">
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900">All apps</h2>
+          <span className="text-sm text-gray-500">Browse the full ecosystem naturally</span>
+        </div>
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {filteredApps.map((app) => (
+            <AppCard key={app.id} app={app} currentVersion={currentVersion} />
           ))}
         </div>
       </section>
@@ -151,15 +194,16 @@ export default function HomePage() {
       <section className="border-y border-gray-100 bg-gray-50 py-12">
         <div className="mx-auto max-w-7xl px-6">
           <p className="text-center text-sm font-semibold uppercase tracking-[0.16em] text-gray-500">
-            Trusted by forward-thinking teams
+            Trusted by industry leaders
           </p>
-          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+          <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
             {TRUST_LOGOS.map((logo) => (
               <div
-                key={logo}
-                className="flex h-16 items-center justify-center rounded-xl border border-gray-200 bg-white text-sm font-bold tracking-[0.2em] text-gray-400 grayscale"
+                key={logo.name}
+                className="flex h-20 items-center justify-center rounded-xl border border-gray-200 bg-white/80 grayscale opacity-70 transition hover:scale-[1.02] hover:grayscale-0 hover:opacity-100"
+                aria-label={logo.name}
               >
-                {logo}
+                {logo.style}
               </div>
             ))}
           </div>

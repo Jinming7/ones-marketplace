@@ -22,6 +22,11 @@ export async function getAppDetail(appKey: string): Promise<AppDetailModel> {
     rating: data.ratingAverage ?? 0,
     installs: data.installs ?? 0,
     summary: data.summary,
+    shortDescription:
+      typeof data.shortDescription === "string"
+        ? data.shortDescription
+        : `${data.summary ?? "Enterprise extension for ONES workflows."}`.slice(0, 120),
+    tags: Array.isArray(data.tags) && data.tags.length ? data.tags : [data.category ?? "Marketplace", "Cloud"],
     programs: (Array.isArray(data.programs) ? data.programs : []).map((code: string) => ({
       code,
       label: code.replaceAll("_", " ")

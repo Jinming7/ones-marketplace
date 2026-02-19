@@ -27,6 +27,8 @@ export interface AppCardModel {
   rating: number;
   installs: number;
   summary: string;
+  shortDescription: string;
+  tags: string[];
   programs: AppProgram[];
   category?: string;
   supportedHosting?: HostingKind[];
