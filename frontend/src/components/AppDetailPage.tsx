@@ -624,21 +624,22 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
         </div>
       </section>
 
-      <section className="sticky top-0 z-30 border-b border-gray-100 bg-white/90 backdrop-blur-md">
-        <div className="mx-auto max-w-7xl px-6">
-          <nav className="flex h-14 items-end space-x-8 overflow-x-auto">
+      <section className="sticky top-0 z-40 w-full border-b border-gray-200 bg-white/95 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center gap-8 px-6">
+          <nav className="flex justify-start gap-8 overflow-x-auto">
             {TABS.map((id) => (
               <button
                 key={id}
                 type="button"
                 onClick={() => setActiveTab(id)}
-                className={`pb-2.5 text-sm capitalize transition-colors ${
-                  activeTab === id
-                    ? "border-b-2 border-blue-600 font-bold text-blue-600"
-                    : "font-medium text-gray-500 hover:text-gray-900"
+                className={`relative cursor-pointer py-4 text-sm transition-colors capitalize ${
+                  activeTab === id ? "font-bold text-blue-600" : "font-medium text-gray-500 hover:text-gray-900"
                 }`}
               >
                 {id}
+                {activeTab === id ? (
+                  <span className="absolute bottom-0 left-0 h-0.5 w-full rounded-t-full bg-blue-600" />
+                ) : null}
               </button>
             ))}
           </nav>
