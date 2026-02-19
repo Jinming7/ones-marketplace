@@ -88,10 +88,10 @@ export function AppCard({ app, disabled = false, disabledLabel, currentVersion }
   return (
     <Link
       href={disabled ? "#" : `/app/${app.id}`}
-      className={`group relative block h-full w-full overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 text-left transition-all duration-300 ${
+      className={`group relative block h-full w-full overflow-hidden rounded-2xl border border-white/50 bg-white/80 p-6 text-left shadow-lg backdrop-blur-md transition-all duration-500 ${
         disabled
           ? "pointer-events-none cursor-not-allowed opacity-60 grayscale"
-          : "hover:border-blue-200 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+          : "hover:border-blue-300/50 hover:shadow-2xl"
       }`}
     >
       <div>
@@ -116,7 +116,7 @@ export function AppCard({ app, disabled = false, disabledLabel, currentVersion }
         </div>
 
         <div className="mb-6 flex-grow">
-          <h3 className="mb-1 line-clamp-1 text-lg font-bold leading-tight tracking-tight text-gray-900">
+          <h3 className="mb-1 line-clamp-1 text-lg font-extrabold leading-tight tracking-tight text-slate-800">
             {app.name}
           </h3>
           <p className="mb-2 text-sm text-gray-500">{app.partnerName}</p>

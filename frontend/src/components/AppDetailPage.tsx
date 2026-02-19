@@ -475,6 +475,7 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
   const [isStickyTabs, setIsStickyTabs] = useState(false);
   const [showTopButton, setShowTopButton] = useState(false);
   const tabsSentinelRef = useRef<HTMLDivElement | null>(null);
+  const currentOnesVersion = "6.10.1";
 
   useEffect(() => {
     const sentinel = tabsSentinelRef.current;
@@ -502,7 +503,7 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
   }, []);
 
   const supportsOnPrem = app?.supportedHosting?.includes("on-prem") ?? false;
-  const primaryCta = selectedHosting === "cloud" ? "Try it free" : supportsOnPrem ? "Free 30-day trial" : "Buy license";
+  const primaryCta = selectedHosting === "cloud" ? "Try it free" : "Download";
   const secondaryText = selectedHosting === "cloud" ? "Free for up to 10 users" : "Starts at $5/mo";
 
   const baseStandard = 10;
@@ -645,9 +646,7 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
               />
               <button
                 type="button"
-                onClick={() => {
-                  if (selectedHosting === "cloud") setOpenInstall(true);
-                }}
+                onClick={() => setOpenInstall(true)}
                 className={`w-full px-4 py-3 text-sm font-bold ${
                   selectedHosting === "cloud"
                     ? "rounded-lg bg-blue-600 text-white hover:bg-blue-700"
@@ -706,7 +705,14 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
         <SidebarWidgets selectedHosting={selectedHosting} app={app} />
       </section>
 
-      <InstallModal isOpen={openInstall} appName={app.name} onClose={() => setOpenInstall(false)} onSuccess={() => setOpenInstall(false)} />
+      <InstallModal
+        isOpen={openInstall}
+        app={app}
+        hosting={selectedHosting}
+        currentOnesVersion={currentOnesVersion}
+        onClose={() => setOpenInstall(false)}
+        onSuccess={() => setOpenInstall(false)}
+      />
       <ScrollToTopButton visible={showTopButton} />
     </main>
   );
