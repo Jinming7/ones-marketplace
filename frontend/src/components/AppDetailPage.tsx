@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   BarChart3,
   CheckCircle2,
@@ -72,7 +72,7 @@ function MediaGallery({ images }: { images: string[] }) {
 function MarkdownDescription({ blocks }: { blocks: string[] }) {
   return (
     <div className="rounded-xl border border-gray-100 bg-white p-6">
-      <h3 className="text-lg font-semibold text-gray-900">Description</h3>
+      <h3 className="tracking-tight text-lg font-semibold text-gray-900">Description</h3>
       <div className="mt-3 space-y-3 text-sm leading-relaxed text-gray-600">
         {blocks.map((line, index) => (
           <p key={index}>{line}</p>
@@ -120,9 +120,9 @@ function ReviewList() {
   return (
     <div className="space-y-4">
       {reviews.map((review) => (
-        <article key={review.user} className="rounded-xl border border-gray-100 bg-gray-50/50 p-6">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-700">
+        <article key={review.user} className="rounded-xl border border-gray-100 bg-white p-8 shadow-sm transition-shadow hover:shadow-md">
+          <div className="mb-4 flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-700 ring-2 ring-blue-50 ring-offset-2">
               {review.user.split(" ").map((part) => part[0]).join("").slice(0, 2)}
             </div>
             <div>
@@ -137,7 +137,7 @@ function ReviewList() {
               </div>
             </div>
           </div>
-          <p className="mt-3 text-sm text-gray-600">{review.text}</p>
+          <p className="mt-3 text-sm leading-relaxed text-gray-600">{review.text}</p>
         </article>
       ))}
     </div>
@@ -158,10 +158,11 @@ function PriceCalculator({
   estimatedText: string;
 }) {
   const clamp = (value: number) => Math.min(10000, Math.max(1, value));
+  const percentage = ((teamSize - 1) / (10000 - 1)) * 100;
 
   return (
     <div className="space-y-6 rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-8 shadow-sm">
-      <h3 className="text-lg font-semibold text-gray-900">Price Calculator</h3>
+      <h3 className="tracking-tight text-lg font-semibold text-gray-900">Price Calculator</h3>
       <div className="grid gap-6 md:grid-cols-[220px_1fr] md:items-end">
         <label className="block">
           <p className="text-sm font-medium text-gray-700">How many users?</p>
@@ -181,7 +182,8 @@ function PriceCalculator({
             max={10000}
             value={teamSize}
             onChange={(event) => setTeamSize(clamp(Number(event.target.value)))}
-            className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200 accent-blue-600"
+            style={{ background: `linear-gradient(to right, #2563EB ${percentage}%, #E5E7EB ${percentage}%)` }}
+            className="h-2 w-full cursor-pointer appearance-none rounded-lg [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-blue-600 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-md [&::-moz-range-thumb]:h-6 [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-blue-600 [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:shadow-md"
           />
           <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
             <span>1</span>
@@ -215,7 +217,7 @@ function ComparisonTable({ isAnnual }: { isAnnual: boolean }) {
   const pro = isAnnual ? 9.6 : 12;
   return (
     <div className="rounded-xl border border-gray-100 bg-white p-6">
-      <h3 className="text-sm font-semibold text-gray-900">Comparison Table</h3>
+      <h3 className="tracking-tight text-sm font-semibold text-gray-900">Comparison Table</h3>
       <div className="mt-3 overflow-x-auto">
         <table className="w-full border-collapse text-sm">
           <thead>
@@ -269,7 +271,7 @@ function InstallationPanel({ hosting }: { hosting: HostingKind }) {
 
   return (
     <div className="rounded-xl border border-gray-100 bg-white p-6">
-      <h3 className="text-lg font-semibold text-gray-900">Version History</h3>
+      <h3 className="tracking-tight text-lg font-semibold text-gray-900">Version History</h3>
       <div className="mt-3 overflow-x-auto">
         <table className="w-full border-collapse text-sm">
           <thead>
@@ -300,7 +302,7 @@ function InstallationPanel({ hosting }: { hosting: HostingKind }) {
 function AppDetailsWidget({ selectedHosting, app }: { selectedHosting: HostingKind; app: AppDetailModel }) {
   return (
     <div className="mb-6 rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
-      <h3 className="text-sm font-semibold text-gray-900">App Details</h3>
+      <h3 className="tracking-tight text-sm font-semibold text-gray-900">App Details</h3>
       <dl className="mt-3 space-y-2 text-sm text-gray-500">
         <div className="flex justify-between gap-3">
           <dt>Version</dt>
@@ -322,7 +324,7 @@ function AppDetailsWidget({ selectedHosting, app }: { selectedHosting: HostingKi
 function ResourcesWidget() {
   return (
     <div className="mb-6 rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
-      <h3 className="text-sm font-semibold text-gray-900">Resources</h3>
+      <h3 className="tracking-tight text-sm font-semibold text-gray-900">Resources</h3>
       <div className="mt-3 space-y-2 text-sm">
         {["Documentation", "EULA", "Privacy Policy"].map((label) => (
           <a key={label} href="#" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
@@ -338,7 +340,7 @@ function ResourcesWidget() {
 function TrustWidget() {
   return (
     <div className="mb-6 rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
-      <h3 className="text-sm font-semibold text-gray-900">Trust & Security</h3>
+      <h3 className="tracking-tight text-sm font-semibold text-gray-900">Trust & Security</h3>
       <div className="mt-3 space-y-3 text-sm text-gray-600">
         <div className="flex flex-wrap gap-2">
           <span className="inline-flex items-center gap-1 rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-blue-700">
@@ -371,11 +373,31 @@ function TrustWidget() {
 }
 
 function SidebarWidgets({ selectedHosting, app }: { selectedHosting: HostingKind; app: AppDetailModel }) {
+  const similarApps = [
+    { id: "scriptrunner", name: "Jira Sync Pro", rating: "4.9" },
+    { id: "github-sync", name: "GitLab CI", rating: "4.7" },
+    { id: "slack", name: "Slack Connect", rating: "4.8" }
+  ];
+
   return (
     <aside className="space-y-4">
       <AppDetailsWidget selectedHosting={selectedHosting} app={app} />
       <ResourcesWidget />
       <TrustWidget />
+      <div className="mb-6 rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
+        <h3 className="tracking-tight text-sm font-semibold text-gray-900">Similar Apps</h3>
+        <div className="mt-3 space-y-2">
+          {similarApps.map((item) => (
+            <Link key={item.id} href={`/app/${item.id}`} className="flex items-center gap-3 rounded-lg p-2 hover:bg-gray-50">
+              <AppIcon name={item.name} sizeClassName="h-8 w-8 rounded-md" iconClassName="h-4 w-4" />
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold text-gray-900">{item.name}</p>
+                <p className="text-xs text-gray-500">Rating {item.rating}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
     </aside>
   );
 }
@@ -417,7 +439,7 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
     if (activeTab === "overview") {
       return (
         <section className="space-y-4 rounded-2xl border border-gray-200/60 bg-white p-8 shadow-sm min-h-[400px]">
-          <h2 className="text-xl font-bold text-gray-900">Overview</h2>
+          <h2 className="tracking-tight text-xl font-bold text-gray-900">Overview</h2>
           <FeatureHighlights />
           <MediaGallery images={app.detailImages} />
           <MarkdownDescription blocks={descriptionBlocks} />
@@ -428,7 +450,7 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
     if (activeTab === "reviews") {
       return (
         <section className="space-y-4 rounded-2xl border border-gray-200/60 bg-white p-8 shadow-sm min-h-[400px]">
-          <h2 className="text-xl font-bold text-gray-900">Reviews</h2>
+          <h2 className="tracking-tight text-xl font-bold text-gray-900">Reviews</h2>
           <div className="mt-2">
             <RatingSummary />
           </div>
@@ -442,7 +464,7 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
     if (activeTab === "pricing") {
       return (
         <section className="space-y-4 rounded-2xl border border-gray-200/60 bg-white p-8 shadow-sm min-h-[400px]">
-          <h2 className="text-xl font-bold text-gray-900">Pricing</h2>
+          <h2 className="tracking-tight text-xl font-bold text-gray-900">Pricing</h2>
           <PriceCalculator
             teamSize={teamSize}
             setTeamSize={setTeamSize}
@@ -458,8 +480,8 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
     if (activeTab === "support") {
       return (
         <section className="rounded-2xl border border-gray-200/60 bg-white p-8 shadow-sm min-h-[400px]">
-          <h2 className="text-xl font-bold text-gray-900">Support</h2>
-          <p className="mt-2 text-sm text-gray-600">SLA: 24h response time.</p>
+          <h2 className="tracking-tight text-xl font-bold text-gray-900">Support</h2>
+          <p className="mt-2 text-sm leading-relaxed text-gray-600">SLA: 24h response time.</p>
           <a href="#" className="mt-3 inline-flex items-center gap-1 text-sm text-blue-600 hover:underline">
             Open ticket
             <ExternalLink className="h-3.5 w-3.5" />
@@ -470,7 +492,7 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
 
     return (
       <section className="rounded-2xl border border-gray-200/60 bg-white p-8 shadow-sm min-h-[400px]">
-        <h2 className="text-xl font-bold text-gray-900">Installation</h2>
+          <h2 className="tracking-tight text-xl font-bold text-gray-900">Installation</h2>
         <div className="mt-3">
           <InstallationPanel hosting={selectedHosting} />
         </div>
@@ -482,7 +504,7 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
     <main className="min-h-screen bg-slate-50">
       <Header showLogin showPartnerPortal />
 
-      <section className="mx-auto max-w-7xl px-6 py-8">
+      <section className="mx-auto max-w-7xl border-b border-blue-100/50 bg-gradient-to-br from-blue-50/80 via-white to-white px-6 py-8">
         <div className="mb-5 flex items-center gap-2 text-sm text-gray-500">
           {onBackHome ? (
             <button type="button" onClick={onBackHome} className="hover:text-blue-600 hover:underline">Marketplace</button>
@@ -490,7 +512,7 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
             <Link href="/" className="hover:text-blue-600 hover:underline">Marketplace</Link>
           )}
           <span>/</span>
-          <span>{app.category ?? "Apps"}</span>
+          <Link href="/" className="hover:text-blue-600 hover:underline">{app.category ?? "Apps"}</Link>
           <span>/</span>
           <span className="text-gray-900">{app.name}</span>
         </div>
@@ -542,18 +564,18 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
         </div>
       </section>
 
-      <section className="sticky top-0 z-40 border-y border-gray-200 bg-white">
+      <section className="sticky top-0 z-30 border-b border-gray-100 bg-white/90 backdrop-blur-md">
         <div className="mx-auto max-w-7xl px-6">
-          <nav className="my-4 inline-flex rounded-xl bg-gray-100/50 p-1">
+          <nav className="flex h-14 items-end space-x-8 overflow-x-auto">
             {TABS.map((id) => (
               <button
                 key={id}
                 type="button"
                 onClick={() => setActiveTab(id)}
-                className={`rounded-lg px-6 py-2 text-sm font-medium capitalize transition-all ${
+                className={`pb-2.5 text-sm capitalize transition-colors ${
                   activeTab === id
-                    ? "bg-white font-semibold text-blue-600 shadow-sm"
-                    : "text-gray-500 hover:text-gray-900"
+                    ? "border-b-2 border-blue-600 font-bold text-blue-600"
+                    : "font-medium text-gray-500 hover:text-gray-900"
                 }`}
               >
                 {id}
@@ -565,7 +587,9 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
 
       <section className="mx-auto grid max-w-7xl gap-8 px-6 py-8 xl:grid-cols-3">
         <div className="xl:col-span-2">
-          {renderTabPanel()}
+          <div key={activeTab} className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+            {renderTabPanel()}
+          </div>
         </div>
 
         <SidebarWidgets selectedHosting={selectedHosting} app={app} />
