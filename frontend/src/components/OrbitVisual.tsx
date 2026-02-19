@@ -3,7 +3,7 @@
 import { Github, ListTodo, MessageSquare, PenTool } from "lucide-react";
 
 const ORBIT_ITEMS = [
-  { label: "Jira", Icon: ListTodo, angle: "top-0 left-1/2 -translate-x-1/2 -translate-y-1/2" },
+  { label: "Automation", Icon: ListTodo, angle: "top-0 left-1/2 -translate-x-1/2 -translate-y-1/2" },
   { label: "Slack", Icon: MessageSquare, angle: "top-1/2 right-0 translate-x-1/2 -translate-y-1/2" },
   { label: "GitHub", Icon: Github, angle: "bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2" },
   { label: "Figma", Icon: PenTool, angle: "top-1/2 left-0 -translate-x-1/2 -translate-y-1/2" }
