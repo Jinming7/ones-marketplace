@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Download, ShieldCheck, Star } from "lucide-react";
 import { AppCardModel } from "@/lib/types";
 import { AppIcon } from "./AppIcon";
@@ -7,7 +8,6 @@ interface AppCardProps {
   disabled?: boolean;
   disabledLabel?: string;
   currentVersion?: string;
-  onSelect?: (appId: string) => void;
 }
 
 type ParsedVersion = [number, number, number];
@@ -82,20 +82,15 @@ function CompatibilityStatus({ app, currentVersion }: { app: AppCardModel; curre
   );
 }
 
-export function AppCard({ app, disabled = false, disabledLabel, currentVersion, onSelect }: AppCardProps) {
+export function AppCard({ app, disabled = false, disabledLabel, currentVersion }: AppCardProps) {
   const isCloudFortified = app.programs.some((program) => program.code === "CLOUD_FORTIFIED");
 
   return (
-    <button
-      type="button"
-      onClick={() => {
-        if (!disabled && onSelect) {
-          onSelect(app.id);
-        }
-      }}
+    <Link
+      href={disabled ? "#" : `/app/${app.id}`}
       className={`group relative w-full overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 text-left transition-all duration-300 ${
         disabled
-          ? "cursor-not-allowed opacity-60 grayscale"
+          ? "pointer-events-none cursor-not-allowed opacity-60 grayscale"
           : "hover:border-blue-200 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
       }`}
     >
@@ -160,6 +155,6 @@ export function AppCard({ app, disabled = false, disabledLabel, currentVersion, 
       </div>
 
       {disabled && disabledLabel ? <p className="mt-3 text-xs text-gray-400">{disabledLabel}</p> : null}
-    </button>
+    </Link>
   );
 }
