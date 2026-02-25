@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Download, ShieldCheck, Star } from "lucide-react";
 import { AppCardModel } from "@/lib/types";
+import { formatCompactNumber, formatInstalls } from "@/lib/formatters";
 import { AppIcon } from "./AppIcon";
 
 interface AppCardProps {
@@ -84,44 +85,46 @@ function CompatibilityStatus({ app, currentVersion }: { app: AppCardModel; curre
 
 export function AppCard({ app, disabled = false, disabledLabel, currentVersion }: AppCardProps) {
   const isCloudFortified = app.programs.some((program) => program.code === "CLOUD_FORTIFIED");
-
-  return (
-    <Link
-      href={disabled ? "#" : `/app/${app.id}`}
-      className={`group relative block h-full w-full overflow-hidden rounded-2xl border border-white/50 bg-white/80 p-6 text-left shadow-lg backdrop-blur-md transition-all duration-500 ${
-        disabled
-          ? "pointer-events-none cursor-not-allowed opacity-60 grayscale"
-          : "hover:border-blue-300/50 hover:shadow-2xl"
-      }`}
-    >
+  const reviewCount = Math.max(12, Math.round(app.installs * 0.026));
+  const hostingLabel = app.supportedHosting?.includes("on-prem") ? "Cloud & On-Prem" : "Cloud";
+  const trustedLabel = isCloudFortified ? "Cloud Fortified" : "Verified Partner";
+  const cardClassName = `group relative block h-full w-full overflow-hidden rounded-2xl border border-white/50 bg-white/80 p-6 text-left shadow-lg backdrop-blur-md transition-all duration-500 ${
+    disabled
+      ? "cursor-not-allowed opacity-60 grayscale"
+      : "hover:border-blue-300/50 hover:shadow-2xl"
+  }`;
+  const cardContent = (
+    <>
       <div>
         <div className="mb-4 flex items-start justify-between">
           <div className="h-12 w-12 flex-shrink-0 rounded-lg shadow-sm">
             <AppIcon name={app.name} category={app.category} />
           </div>
 
-          <div className="flex flex-col items-end gap-1">
+          <div className="flex flex-wrap items-center justify-end gap-1.5">
             {app.spotlight ? (
-              <span className="whitespace-nowrap rounded bg-purple-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-purple-600">
+              <span className="whitespace-nowrap rounded border border-violet-100 bg-violet-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-violet-700">
                 {app.spotlight}
               </span>
             ) : null}
-            {isCloudFortified ? (
-              <span className="inline-flex items-center gap-1 whitespace-nowrap rounded bg-blue-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-blue-700">
-                <ShieldCheck className="h-3 w-3" />
-                Cloud
-              </span>
-            ) : null}
+            <span className="whitespace-nowrap rounded border border-gray-200 bg-gray-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-gray-600">
+              {hostingLabel}
+            </span>
           </div>
         </div>
 
-        <div className="mb-6 flex-grow">
+        <div className="mb-5 flex-grow">
           <h3 className="mb-1 line-clamp-1 text-lg font-extrabold leading-tight tracking-tight text-slate-800">
             {app.name}
           </h3>
-          <p className="mb-2 text-sm text-gray-500">{app.partnerName}</p>
+          <p className="mb-2 text-sm text-gray-500">By {app.partnerName}</p>
           <p className="line-clamp-2 text-sm leading-relaxed text-gray-600">{app.shortDescription}</p>
-          <div className="mt-2 flex flex-wrap gap-1.5">
+
+          <div className="mt-3 flex flex-wrap items-center gap-1.5">
+            <span className="inline-flex items-center gap-1 rounded-full border border-blue-100 bg-blue-50 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-blue-700">
+              <ShieldCheck className="h-3 w-3" />
+              {trustedLabel}
+            </span>
             {app.tags.slice(0, 2).map((tag) => (
               <span key={tag} className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-600">
                 {tag}
@@ -131,15 +134,15 @@ export function AppCard({ app, disabled = false, disabledLabel, currentVersion }
         </div>
       </div>
 
-      <div className="border-t border-gray-50 pt-4 flex items-center justify-between">
-        <div className="flex items-center gap-3 text-xs font-medium text-gray-500">
-          <span className="inline-flex items-center gap-1">
+      <div className="flex items-center justify-between border-t border-gray-100 pt-4">
+        <div className="flex flex-wrap items-center gap-3 text-xs font-medium text-gray-600">
+          <span className="inline-flex items-center gap-1" aria-label={`${app.rating.toFixed(1)} stars and ${formatCompactNumber(reviewCount)} reviews`}>
             <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-            {app.rating.toFixed(1)}
+            {app.rating.toFixed(1)} ({formatCompactNumber(reviewCount)} reviews)
           </span>
-          <span className="inline-flex items-center gap-1">
+          <span className="inline-flex items-center gap-1" aria-label={`${app.installs.toLocaleString("en-US")} installs`}>
             <Download className="h-3.5 w-3.5" />
-            {Math.round(app.installs / 1000)}k
+            {formatInstalls(app.installs)} installs
           </span>
         </div>
 
@@ -162,6 +165,20 @@ export function AppCard({ app, disabled = false, disabledLabel, currentVersion }
       </div>
 
       {disabled && disabledLabel ? <p className="mt-3 text-xs text-gray-400">{disabledLabel}</p> : null}
+    </>
+  );
+
+  if (disabled) {
+    return (
+      <article className={cardClassName} aria-disabled="true">
+        {cardContent}
+      </article>
+    );
+  }
+
+  return (
+    <Link href={`/app/${app.id}`} className={cardClassName} aria-label={`View details for ${app.name}`}>
+      {cardContent}
     </Link>
   );
 }

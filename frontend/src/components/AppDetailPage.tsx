@@ -16,6 +16,7 @@ import { Header } from "@/components/Header";
 import { AppIcon } from "@/components/AppIcon";
 import { CustomSelect } from "@/components/CustomSelect";
 import { InstallModal } from "@/components/InstallModal";
+import { formatInstalls } from "@/lib/formatters";
 import { AppDetailModel, HostingKind } from "@/lib/types";
 
 const TABS = ["overview", "reviews", "pricing", "support", "installation"] as const;
@@ -639,6 +640,7 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
               <CustomSelect
                 value={selectedHosting}
                 onChange={(value) => setSelectedHosting(value as HostingKind)}
+                ariaLabel="Select hosting option"
                 options={[
                   { value: "cloud", label: "Cloud" },
                   { value: "on-prem", label: "On-Premise", disabled: !supportsOnPrem }
@@ -661,7 +663,7 @@ export function AppDetailPage({ app, onBackHome }: AppDetailPageProps) {
 
           <div className="mt-6 grid gap-3 rounded-xl border border-gray-100 bg-gray-50 p-4 md:grid-cols-3">
             <p className="inline-flex items-center gap-2 text-sm text-gray-700"><Star className="h-4 w-4 fill-amber-400 text-amber-400" /> {app.rating.toFixed(1)} rating</p>
-            <p className="text-sm text-gray-700">{Math.round(app.installs / 1000)}k installs</p>
+            <p className="text-sm text-gray-700">{formatInstalls(app.installs)} installs</p>
             <p className="text-sm text-gray-700">Partner Supported</p>
           </div>
         </div>

@@ -16,6 +16,8 @@ export function CategoryPills({ categories, selected, onSelect }: CategoryPillsP
             key={category}
             type="button"
             onClick={() => onSelect(category)}
+            aria-pressed={active}
+            aria-label={`Filter by ${category}`}
             className={`whitespace-nowrap rounded-full border px-6 py-3 text-sm font-medium transition-all ${
               active
                 ? "border-blue-500 bg-blue-50 text-blue-700 shadow-sm"

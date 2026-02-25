@@ -13,6 +13,7 @@ interface CustomSelectProps {
   options: CustomSelectOption[];
   value: string;
   onChange: (value: string) => void;
+  ariaLabel?: string;
   className?: string;
   triggerClassName?: string;
   popoverClassName?: string;
@@ -22,6 +23,7 @@ export function CustomSelect({
   options,
   value,
   onChange,
+  ariaLabel,
   className,
   triggerClassName,
   popoverClassName
@@ -51,6 +53,9 @@ export function CustomSelect({
       <button
         type="button"
         onClick={() => setOpen((state) => !state)}
+        aria-label={ariaLabel}
+        aria-haspopup="listbox"
+        aria-expanded={open}
         className={`flex w-full items-center justify-between rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:border-blue-400 ${
           triggerClassName ?? ""
         }`}
