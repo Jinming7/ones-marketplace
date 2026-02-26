@@ -1,14 +1,19 @@
 import cors from "cors";
 import express, { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import { ZodError } from "zod";
 import apiRouter from "./routes/index.js";
+import { env } from "./config/env.js";
 import { mockAuth } from "./middlewares/auth.js";
 
 export const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(mockAuth);
+
+if (env.enableMockAuth) {
+  app.use(mockAuth);
+}
 
 app.get("/health", (_req, res) => {
   res.status(StatusCodes.OK).json({ ok: true });
@@ -16,9 +21,29 @@ app.get("/health", (_req, res) => {
 
 app.use("/api", apiRouter);
 
-app.use((error: Error & { status?: number }, _req: Request, res: Response, _next: NextFunction) => {
+app.use((error: Error & { status?: number; code?: string }, _req: Request, res: Response, _next: NextFunction) => {
+  if (error instanceof ZodError) {
+    res.status(StatusCodes.BAD_REQUEST).json({
+      message: "Validation failed",
+      issues: error.issues
+    });
+    return;
+  }
+
+  const isPrismaEnvError = error.message.includes("Environment variable not found: DATABASE_URL");
+  if (isPrismaEnvError) {
+    res.status(StatusCodes.SERVICE_UNAVAILABLE).json({
+      message: "Database is not configured. Please set DATABASE_URL."
+    });
+    return;
+  }
+
   const status = error.status ?? StatusCodes.INTERNAL_SERVER_ERROR;
-  res.status(status).json({
-    message: error.message || "Internal server error"
-  });
+  const message = status >= 500 ? "Internal server error" : error.message || "Request failed";
+
+  if (status >= 500) {
+    console.error("[backend:error]", error);
+  }
+
+  res.status(status).json({ message });
 });

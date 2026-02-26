@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Search, ShieldCheck, Sparkles, WandSparkles } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search, ShieldCheck, SlidersHorizontal, Sparkles, WandSparkles, X } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { Header } from "@/components/Header";
 import { AppCard } from "@/components/AppCard";
@@ -48,6 +48,10 @@ export default function HomePage() {
   }, [search, category]);
 
   const trendingApps = filteredApps.slice(0, 10);
+  const clearFilters = () => {
+    setSearch("");
+    setCategory("All");
+  };
 
   const scrollTrending = (direction: "left" | "right") => {
     if (!trendingRef.current) return;
@@ -75,6 +79,7 @@ export default function HomePage() {
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Search apps, integrations, or vendors..."
+                aria-label="Search marketplace apps"
                 className="h-full w-full border-0 bg-transparent text-lg text-gray-700 outline-none placeholder:text-gray-400"
               />
             </label>
@@ -140,6 +145,7 @@ export default function HomePage() {
             <button
               type="button"
               onClick={() => scrollTrending("left")}
+              aria-label="Scroll trending apps left"
               className="rounded-full border border-gray-200 bg-white p-2 text-gray-600 transition hover:border-blue-400 hover:text-blue-600"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -147,6 +153,7 @@ export default function HomePage() {
             <button
               type="button"
               onClick={() => scrollTrending("right")}
+              aria-label="Scroll trending apps right"
               className="rounded-full border border-gray-200 bg-white p-2 text-gray-600 transition hover:border-blue-400 hover:text-blue-600"
             >
               <ChevronRight className="h-4 w-4" />
@@ -157,6 +164,7 @@ export default function HomePage() {
                 value={currentVersion}
                 onChange={setCurrentVersion}
                 options={versions.map((version) => ({ value: version, label: `v${version}` }))}
+                ariaLabel="Select ONES version"
                 className="w-[120px]"
                 triggerClassName="rounded-full"
               />
@@ -180,6 +188,56 @@ export default function HomePage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-6 pb-16">
+        <div className="sticky top-3 z-30 mb-6 rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-sm backdrop-blur">
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex min-w-[220px] flex-1 items-center rounded-lg border border-gray-200 bg-white px-3 py-2">
+              <Search className="h-4 w-4 text-gray-400" />
+              <input
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search in app listings"
+                aria-label="Search app listings"
+                className="w-full bg-transparent px-2 text-sm text-gray-700 outline-none placeholder:text-gray-400"
+              />
+            </div>
+            <div className="w-[170px]">
+              <CustomSelect
+                value={category}
+                onChange={setCategory}
+                ariaLabel="Select app category"
+                options={CATEGORY_ITEMS.map((item) => ({ value: item, label: item }))}
+                triggerClassName="rounded-lg"
+              />
+            </div>
+            <div className="w-[140px]">
+              <CustomSelect
+                value={currentVersion}
+                onChange={setCurrentVersion}
+                ariaLabel="Select ONES version for compatibility"
+                options={versions.map((version) => ({ value: version, label: `v${version}` }))}
+                triggerClassName="rounded-lg"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={clearFilters}
+              aria-label="Clear search and category filters"
+              className="inline-flex items-center gap-1 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 hover:border-blue-500 hover:text-blue-700"
+            >
+              <X className="h-4 w-4" />
+              Clear
+            </button>
+          </div>
+          <div className="mt-2 flex items-center gap-2 px-1 text-xs text-gray-500">
+            <SlidersHorizontal className="h-3.5 w-3.5" />
+            <span>{filteredApps.length} apps shown</span>
+            <span className="text-gray-300">|</span>
+            <span>Category: {category}</span>
+            <span className="text-gray-300">|</span>
+            <span>Version: v{currentVersion}</span>
+          </div>
+        </div>
+
         <div className="mb-6 flex items-center justify-between gap-4">
           <h2 className="text-2xl font-bold tracking-tight text-slate-900">All apps</h2>
           <span className="text-sm text-gray-500">Browse the full ecosystem naturally</span>
@@ -202,6 +260,7 @@ export default function HomePage() {
                 key={logo.name}
                 className="flex h-20 items-center justify-center rounded-xl border border-gray-200 bg-white/80 grayscale opacity-70 transition hover:scale-[1.02] hover:grayscale-0 hover:opacity-100"
                 aria-label={logo.name}
+                role="img"
               >
                 {logo.style}
               </div>
